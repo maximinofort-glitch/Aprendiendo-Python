@@ -193,18 +193,5 @@ print("")
 
 
 
-#print("\nLas calificaciones de mayor a menor son: " ", ".join(str(x) for x in reversed(sorted(Calificaciones))),"\n")
-
-#Muestre:
-    #Todos los nombres en una sola línea separados por comas.
-    #El alumno con la mejor calificación y el alumno con la peor calificación.
-    #El promedio de calificaciones (redondeado a 2 decimales).
-    #El promedio de edades.
-    #La lista numerada de estudiantes en el formato:
-        #1. Ana (20 años, calificación 9)
-    #Quiénes reprobaron (nota < 6).
-    #Si todos aprobaron (all).
-    #Si al menos uno es mayor de 21 años (any).
-    #Los estudiantes ordenados por calificación de mayor a menor.
 #Emiliano -8 20 lisa 10 -21 sofia1 9 22
 #Emiliano 8 20 sebastian 8 22 lisa 10 21 alejandro 10 20 sofia 9 22 julio 3 18
