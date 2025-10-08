@@ -102,7 +102,7 @@ for x in range(len(Calificaciones)):
 
 for x in range(len(Calificaciones)):
     if Calificaciones[x] == sorted(Calificaciones)[0]:
-        ResagadosNombres.append(Nombres[x])
+        ResagadosNombres.append(Nombres[x - 1])
 
 
 if len(ResagadosNombres) != 0:

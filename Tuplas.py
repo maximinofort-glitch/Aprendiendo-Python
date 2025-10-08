@@ -8,13 +8,13 @@
     #El alumno con la mejor calificación y el peor.
     #El promedio de calificaciones.
     #Qué alumnos tienen una nota mayor al promedio.
-#max 22 8.7 sofia 21 9 tola 22 4.5
+#max 22 8.7 sofia 21 9 tola 22 4.5 diego 20 9
 Errores = []
-Contador_Tuplas = 1
 Alumnos = []
+Calificaciones = []
 while True:
-    #Datos = input("Ingresa los datos de los alumnos (nombre, edad, calificación) separados por espacios: ")
-    Datos = "max 22 8.7 sofia 21 9 tola 22 4.5"
+    Datos = input("Ingresa los datos de los alumnos (nombre, edad, calificación) separados por espacios: ")
+    
     if len(Datos.split()) % 3 != 0:
             print("Error: Los datos estan incompletos, deben de poderse crear conjuntos de tres (Nombre, Edad, Calificacion), intenta nuevamente")
             continue
@@ -25,8 +25,6 @@ while True:
             Nombre = DatosListados[x]
             Edad = DatosListados[x + 1]
             Calificacion = DatosListados[x + 2]
-            print(Edad)
-            print(Calificacion)
             try:
                 Edad = int(Edad)
             except ValueError:
@@ -40,29 +38,75 @@ while True:
                 print("Error: Se ha introducido un tipo de dato incorrecto en la posicion ",(x + 2),". La calificación debe ser un número decimal.")      
             Conjunto = (Nombre, Edad, Calificacion)
             Alumnos.append(Conjunto)
+            Calificaciones.append(Calificacion)
+            print(f"{Nombre}, {Edad} años, calificación: {Calificacion}")
         if len(Errores) > 0:
+            Conjunto = []
+            Alumnos = []
+            Calificaciones = []
             continue
         break
     
-print("funciona")
+PromedioCalificacion = sum(Calificaciones) / len(Calificaciones)
+CalificacionesMayores = []
 CalificacionesMax = []
 CalificacionesMin = []
-for Nombre, Edad, Calificacion in Alumnos:
-    print(f"{Nombre}, {Edad} años, calificación: {Calificacion}")
-    Calificaciones.append(Calificacion)
-for x in Calificaciones:
-    if x == sorted(Calificaciones)[len(Calificaciones) - 1]
-        CalificacionMax.append(x)
-    elif x == sorted(Calificaciones)[0]
-        CalificacionesMin.append(X)
-if len(CalificacionesMax) == 1
+    
+for x in range(len(Calificaciones)):
+    if Calificaciones[x] == sorted(Calificaciones)[len(Calificaciones) - 1]:
+        CalificacionesMax.append(x)
+    elif Calificaciones[x] == sorted(Calificaciones)[0]:
+        CalificacionesMin.append(x)
+    if Calificaciones[x] > PromedioCalificacion:
+        CalificacionesMayores.append(Calificaciones[x])
 
-elif len(CalificacionesMax) > 2
 
-else:
-
-if len(CalificacionesMin) == 1
-
-elif len(CalificacionesMin) > 2
+if len(CalificacionesMax) == 1:
+    print(f"El alumno con la mayor calificacion es {Alumnos[CalificacionesMax[0]][0]} con una calificacion de {Alumnos[CalificacionesMax[0]][2]}")
 
 else:
+    print(f"Los alumnos con la mayor calificacion son ", end = "")
+    for x in range(len(CalificacionesMax)):
+        if x < (len(CalificacionesMax) - 2):
+            print(f"{Alumnos[CalificacionesMax[x]][0]}, ", end = "")
+
+        elif x == (len(CalificacionesMax) - 1):
+            print(f" y {Alumnos[CalificacionesMax[x]][0]} ", end = "")
+        
+        else:
+            print(f"{Alumnos[CalificacionesMax[x]][0]}", end = "")
+    print("con una calificacion de", Alumnos[CalificacionesMax[0]][2])
+
+print("")
+
+if len(CalificacionesMin) == 1:
+    print(f"El alumno con la menor calificacion es {Alumnos[CalificacionesMin[0]][0]} con una calificacion de {Alumnos[CalificacionesMin[0]][2]}")
+
+else:
+    print(f"Los alumnos con la menor calificacion son ", end = "")
+
+    for x in range(len(CalificacionesMin)):
+        if x < (len(CalificacionesMin) - 2):
+            print(f"{Alumnos[CalificacionesMin[x]][0]}, ", end = "")
+
+        elif x == (len(CalificacionesMin) - 1):
+            print(f" y {Alumnos[CalificacionesMin[x]][0]} ", end = "")
+        
+        else:
+            print(f"{Alumnos[CalificacionesMin[x]][0]}", end = "")
+        
+    print("con una calificacion de",Alumnos[CalificacionesMin[0]][2])
+if len(CalificacionesMayores) == 1:
+    print(f"Solo un alumno obtuvo una calificacion mayor al promedio y fue {Alumnos[CalificacionesMayores[0]][0]} con una calificacion de {Alumnos[CalificacionesMayores[0]][2]}")
+
+else:
+    print(f"Los alumnos con una calificacion mayor al promedio son: ", end = "")
+
+    for x in range(len(CalificacionesMayores)):
+        if x < (len(CalificacionesMayores) - 2):
+            print(f"{Alumnos[x][0]} (Calificacion: {Alumnos[x][2]}), ", end = "")
+        elif x == (len(CalificacionesMayores) - 1):
+            print(f" y {Alumnos[x][0]} (Calificacion: {Alumnos[x][2]}) ", end = "")
+        
+        else:
+            print(f"{Alumnos[x][0]} (Calificacion: {Alumnos[x][2]})", end = "")
