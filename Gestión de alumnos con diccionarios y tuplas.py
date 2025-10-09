@@ -14,6 +14,7 @@
 #Ejemplo:
     #Ana 20 9.5 Luis 22 8.0 Pedro 19 6.5
 DatosListados = []
+Alumnos = []
 while True:
     Datos = input("Introduce los datos de los alumnos separados por espacios de la siguiente forma y orden: Nombre Edad Calificacion: ")
     DatosListados = Datos.split()
@@ -24,5 +25,10 @@ while True:
         Nombre = DatosListados[x]
         Edad = DatosListados[x + 1]
         Calificaciones = DatosListados[x + 2]
+        Alumno = (Nombre, Edad, Calificaciones)
+        AlumnosTupla.append(Alumno)
+        Alumnos = {
+            
+        }
     break
 print("Funciona")
