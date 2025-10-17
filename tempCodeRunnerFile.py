@@ -1,0 +1,1 @@
+Calificaciones = [float(x) if x % 2 != 0] for x in Calificaciones 
