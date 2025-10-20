@@ -1,4 +1,9 @@
 import math
+Fechas_input = [
+("Introduce la primera fecha: "),
+("Introduce la segunda fecha: "),
+("Introduce la tercera fecha: ")
+]
 while True:
  try:
       sorteos = int(input("Cantidad de sorteos a calcular: "))
@@ -9,24 +14,43 @@ while True:
            print("Valor no válido, escoge entre 1, 2 o 3.")
  except ValueError:
                print("Debes escribir un número válido (1, 2 o 3).")
-
-
+contador = 0
+Fechas = []
+while contador <= sorteos: 
+        fecha = (input(Fechas_input[contador]))
+        Fechas.append(fecha)
+        if fecha == "atras" and contador > 0:
+            if contador == 0:
+               contador += 1
+            contador -= 1
+        elif fecha == "exit":
+          print("introducir fin del programa")
+        else:
+          contador += 1
+print(
+     f"{f'Fecha a trabajar: {Fechas[0]}' if contador == 1 else ''}"
+     f"{f'Fechas a trabajar: {", ".join(Fechas)}' if contador >= 2 else ''}"
+)
+print(contador)
+print("aqui acaba")
+    
 fecha1 = input("Introduce la primera fecha: ")
-fecha2 = 0
-fecha3 = 0
 if sorteos == 1:
-     print(fecha1)
+     fecha2 = 0
+     fecha3 = 0
+     print("Fecha a trabajar: ", fecha1)
      print(" ")
-if sorteos >= 2:
+elif sorteos >= 2:
      fecha2 = input("Introduce la segunda fecha: ")
-if sorteos == 2:
-     print(fecha1, fecha2)
-     print(" ")
-if sorteos == 3:
-     fecha3 = input("Introduce la tercera fecha: ")
-     print(" ")
-     print("fechas a trabajar: ", fecha1, fecha2, fecha3)
-     print(" ")
+     if sorteos == 2:
+          fecha3 = 0
+          print("fechas a trabajar: ", fecha1, fecha2)
+          print(" ")
+     elif sorteos == 3:
+          fecha3 = input("Introduce la tercera fecha: ")
+          print(" ")
+          print("fechas a trabajar: ", fecha1, fecha2, fecha3)
+          print(" ")
 def calculo(vendedor):
     global deuda
     ExtraSorteo = 0
@@ -83,7 +107,7 @@ def calculo(vendedor):
       f"{fecha1}V="
       f"{f1:<5}"
       f"{'p-' if p1 == 0 else ''}"
-      f"{'p=' if p1 != 0 else ''} "
+      f"{'p=' if p1 != 0 else ''}"
       f"{p1}"
       f"{' -' if p1 == 0 else ''}"
     )
@@ -91,7 +115,7 @@ def calculo(vendedor):
       f"{fecha2}V="
       f"{f2:<5}"
       f"{'p-' if p2 == 0 else ''}"
-      f"{'p=' if p2 != 0 else ''} "
+      f"{'p=' if p2 != 0 else ''}"
       f"{p2}"
       f"{' -' if p2 == 0 else ''}"
     )
@@ -99,7 +123,7 @@ def calculo(vendedor):
       f"{fecha3}V="
       f"{f3:<5}"
       f"{'p-' if p3 == 0 else ''}"
-      f"{'p=' if p3 != 0 else ''} "
+      f"{'p=' if p3 != 0 else ''}"
       f"{p3}"
       f"{' -' if p3 == 0 else ''}"
     )
@@ -129,7 +153,7 @@ def calculo(vendedor):
        print(restantes)
     if vendedor == "elena":
        print(
-       f"\n{' ':<5}-{ExtraSorteo}"
+       f"{' ':<5}-{ExtraSorteo}"
        f"\n{' ':<6}----"
        f"\n{' ':<6}{resultado}"
        )
@@ -141,6 +165,8 @@ def calculo(vendedor):
              )
         print(" ")
         print(" ") 
+
+
 vendedor = " " 
 while vendedor != "exit":
       while True:
@@ -150,11 +176,11 @@ while vendedor != "exit":
            if vendedor == "exit":
                print("Saliendo del programa...")
                break
-           if vendedor in ("tere","tola","maribel","luis","carmen","elena","90","27","lupe","norma"):
+           elif vendedor in ("tere","tola","maribel","luis","carmen","elena","90","27","lupe","norma"):
                 deuda = int(input("Escribe la deuda pendiente: "))
                 print(" ")
                 calculo(vendedor)
-           elif vendedor != "exit": 
+           else:
                 print("vendedor no encontrado, intenta de nuevo.")
           except ValueError:
-                print("Debes escribir un número válido.")
+                print("Debes escribir un dato valido.")
