@@ -1,12 +1,27 @@
 import math
-Fechas_input = [
+SolicitudesFechas = [
      ("Introduce la primera fecha: "),
      ("Introduce la segunda fecha: "),
      ("Introduce la tercera fecha: ")
 ] 
+def paga(vendedor):
+     if vendedor == "tere" or vendedor == "tola" or vendedor == "90" or vendedor == "27":
+          porcentaje = 0.7
+     elif vendedor == "tere" or vendedor == "tola" or vendedor == "90" or vendedor == "27":
+          porcentaje = 0.7
+     elif vendedor == "maribel":
+          porcentaje = 0.77
+     elif vendedor == "carmen" or vendedor == "luis":
+          porcentaje = 0.75
+     elif vendedor == "lupe" or vendedor == "norma":
+          porcentaje = 0.72
+     elif vendedor == "elena":
+          porcentaje = 0.71
+     return porcentaje
+
 Contador = 0
 Fechas = []
-Dia_input = [
+SolicitudesVenta = [
      ("Escribe la venta de la primera fecha: "),
      ("Escribe el valor del primer premio: "),
      ("Escribe la venta de la segunda fecha: "),
@@ -14,13 +29,52 @@ Dia_input = [
      ("Escribe la venta de la tercera fecha: "),
      ("Escribe el valor del tercer premio: ")
 ]
-Dias_input = []
 Dias = {
      "dia1" : [0 , 0],
      "dia2" : [0 , 0],
      "dia3" : [0 , 0]
 }
+def SolicitudDatos(sorteos):
+     global Dias
+     Contador = 0
+     Dias_input = []
+     while Contador < sorteos * 2: 
+          Dia = (input(SolicitudesVenta[Contador]))
+          Dias_input.append(Dia)
+          if Dia == "atras" and Contador > 0:
+               Contador -= 1
+          elif Dia == "exit":
+               print("introducir fin del programa")
+          else:
+               Contador += 1
+          if Contador % 2 == 0:
+               Dias[f"dia{str(int(Contador/2))}"] = [int(Dias_input[Contador - 2]), int(Dias_input[Contador - 1])]
+     return Dias
+ExtraSorteo = 0
+def ElenaExtra(ExtraSorteo):
+     for dia in Dias:
+          print(Dias[dia][0])
+          if Dias[dia][0] > 0 :
+               ExtraSorteo = ExtraSorteo + 35
+          print(Dias[dia][0],ExtraSorteo)
+     return ExtraSorteo
 
+def imprimirDias(Dias, Fechas):
+     global sorteos
+     lineas = {}
+     indice = 1
+     while indice <= sorteos:
+          lineas[f"linea{indice}"] = (
+               f"{Fechas[indice - 1]}V="
+               f"{Dias[f'dia{indice}'][0]:<5}"
+               f"{'p-' if Dias[f'dia{indice}'][1] == 0 else ''}"
+               f"{'p=' if Dias[f'dia{indice}'][1] != 0 else ''}"
+               f"{Dias[f'dia{indice}'][1]}"
+               f"{' -' if Dias[f'dia{indice}'][1] == 0 else ''}"
+               )
+          indice += 1
+     print(lineas)
+     return lineas
 while True:
      try:
           sorteos = int(input("Cantidad de sorteos a calcular: "))
@@ -33,7 +87,7 @@ while True:
           print("Debes escribir un número válido (1, 2 o 3).")
 
 while Contador < sorteos: 
-     fecha = (input(Fechas_input[Contador]))
+     fecha = (input(SolicitudesFechas[Contador]))
      Fechas.append(fecha)
      if fecha == "atras" and Contador > 0:
           Contador -= 1
@@ -47,61 +101,26 @@ print(
 )
 
 
+     
+
 
 def calculo(vendedor):
      global deuda
      global contador
-     ExtraSorteo = 0
-     if vendedor == "maribel":
-          porcentaje = 0.77
-     elif vendedor == "carmen" or vendedor == "luis":
-          porcentaje = 0.75
-     elif vendedor == "lupe" or vendedor == "norma":
-          porcentaje = 0.72
-     elif vendedor == "elena":
-          porcentaje = 0.71
-     elif vendedor == "tere" or vendedor == "tola" or vendedor == "90" or vendedor == "27":
-          porcentaje = 0.7
-     print(" ")
-     print(vendedor, porcentaje,"%")
-     print(" ")
+     global ExtraSorteo
+     
      f1 = f2 = f3 = 0
      p1 = p2 = p3 = 0
 
+     porcentaje = paga(vendedor)
+     print(vendedor, "tiene una ganancia del", porcentaje,"%")
 
-
-
-
-   
-
-
-     Contador = 0
-     while Contador < sorteos * 2: 
-          Dia = (input(Dia_input[Contador]))
-          Dias_input.append(Dia)
-          if fecha == "atras" and Contador > 0:
-               Contador -= 1
-          elif fecha == "exit":
-               print("introducir fin del programa")
-          else:
-               Contador += 1
-          if Contador % 2 == 0:
-
-               Dias[f"dia{str(int(Contador/2))}"] = [int(Dias_input[Contador - 2]), int(Dias_input[Contador - 1])]
-     print(Dias)
-     print(Dias["dia1"][0], Dias["dia1"][1])
-         
-
+     SolicitudDatos(sorteos)
 
      if vendedor == "elena":
-          if Dias["dia1"][0] > 0 :
-               ExtraSorteo = ExtraSorteo + 35
-          if sorteos >= 2:
-               if Dias["dia2"][0] > 0:
-                  ExtraSorteo = ExtraSorteo + 35
-          if sorteos == 3:
-               if Dias["dia3"][0] > 0:
-                  ExtraSorteo = ExtraSorteo + 35
+          ElenaExtra(ExtraSorteo)
+
+
      ventas = Dias["dia1"][0] + Dias["dia2"][0] + Dias["dia3"][0]
      pagado = ventas * porcentaje
      decimal = pagado - int(pagado)
@@ -113,30 +132,11 @@ def calculo(vendedor):
      resto = pagado - restante
      resultado = resto - ExtraSorteo
      total = resultado + deuda
-     linea1 = (
-          f"{Fechas[0]}V="
-          f"{Dias["dia1"][0]:<5}"
-          f"{'p-' if Dias["dia1"][1] == 0 else ''}"
-          f"{'p=' if Dias["dia1"][1] != 0 else ''}"
-          f"{Dias["dia1"][1]}"
-          f"{' -' if Dias["dia1"][1] == 0 else ''}"
-     )
-     linea2 = (
-          f"{Fechas[1]}V="
-          f"{Dias["dia2"][0]:<5}"
-          f"{'p-' if Dias["dia2"][1] == 0 else ''}"
-          f"{'p=' if Dias["dia2"][1] != 0 else ''}"
-          f"{Dias["dia2"][1]}"
-          f"{' -' if Dias["dia2"][1] == 0 else ''}"
-     )
-     linea3 = (
-          f"{Fechas[2]}V="
-          f"{Dias["dia3"][0]:<5}"
-          f"{'p-' if Dias["dia3"][1] == 0 else ''}"
-          f"{'p=' if Dias["dia3"][1] != 0 else ''}"
-          f"{Dias["dia3"][1]}"
-          f"{' -' if Dias["dia3"][1] == 0 else ''}"
-     )
+
+     lineas = imprimirDias(Dias,Fechas)
+     print(lineas)
+
+
      restantes = (   
           f"{' ':<6}-{restante}"
           f"\n{' ':<6}-----"
@@ -145,12 +145,22 @@ def calculo(vendedor):
      print(" ")
      print(vendedor, porcentaje,"%")
      print(" ")
+
+     indice = 1
+     while indice < 3:
+          if Dias[f"dia{indice}"][0] != 0:
+               print(lineas[f"linea{indice}"])
+          indice += 1
+
      if Dias["dia1"][0] != 0:
-          print(linea1)
+          print(lineas["linea1"])
      if Dias["dia2"][0] != 0:
-          print(linea2)
+          print(lineas["linea1"])
      if Dias["dia3"][0] != 0:
-          print(linea3)
+          print(lineas["linea1"])
+
+
+
 
      print(
          f"{' ':<6}----"
