@@ -5,16 +5,14 @@ SolicitudesFechas = [
      ("Introduce la tercera fecha: ")
 ] 
 def paga(vendedor):
-     if vendedor == "tere" or vendedor == "tola" or vendedor == "90" or vendedor == "27":
+     if vendedor in ("tere", "tola", "90", "27"):
           porcentaje = 0.7
-     elif vendedor == "tere" or vendedor == "tola" or vendedor == "90" or vendedor == "27":
-          porcentaje = 0.7
-     elif vendedor == "maribel":
-          porcentaje = 0.77
-     elif vendedor == "carmen" or vendedor == "luis":
+     elif vendedor in ("carmen", "luis"):
           porcentaje = 0.75
-     elif vendedor == "lupe" or vendedor == "norma":
+     elif vendedor in ("lupe", "norma"):
           porcentaje = 0.72
+     elif vendedor == "maribel":
+          porcentaje = 0.77 
      elif vendedor == "elena":
           porcentaje = 0.71
      return porcentaje
@@ -75,6 +73,75 @@ def imprimirDias(Dias, Fechas):
           indice += 1
      print(lineas)
      return lineas
+
+def calculo(vendedor, deuda):
+     global ExtraSorteo
+     
+     f1 = f2 = f3 = 0
+     p1 = p2 = p3 = 0
+
+     porcentaje = paga(vendedor)
+     print(vendedor, "tiene una ganancia del", porcentaje,"%")
+
+     SolicitudDatos(sorteos)
+
+     if vendedor == "elena":
+          ExtraSorteo = ElenaExtra(ExtraSorteo)
+
+
+     ventas = Dias["dia1"][0] + Dias["dia2"][0] + Dias["dia3"][0]
+     pagado = ventas * porcentaje
+     decimal = pagado - int(pagado)
+     if decimal <= 0.5:
+          pagado = math.floor(pagado)
+     else:
+          pagado = math.ceil(pagado)
+     restante = Dias["dia1"][1] + Dias["dia2"][1] + Dias["dia3"][1]
+     resto = pagado - restante
+     resultado = resto - ExtraSorteo
+     total = resultado + deuda
+
+     lineas = imprimirDias(Dias,Fechas)
+
+
+     restantes = (   
+          f"{' ':<6}-{restante}"
+          f"\n{' ':<6}-----"
+          f"\n{' ':<6}{resto}"
+     )
+     print(" ")
+     print(vendedor, porcentaje,"%")
+     print(" ")
+
+     indice = 1
+     while indice <= 3:
+          if Dias[f"dia{indice}"][0] != 0:
+               print(lineas[f"linea{indice}"])
+          indice += 1
+
+     print(
+          f"{' ':<6}----"
+          f"\n{' ':<6}{ventas}"
+          f"\n{' ':<9}x"
+          f"\n{' ':<6}----"
+          f"\n{' ':<6}{pagado}"
+     )
+     print(restantes)
+     if vendedor == "elena":
+          print(
+          f"{' ':<5}-{ExtraSorteo}"
+          f"\n{' ':<6}----"
+          f"\n{' ':<6}{resultado}"
+     )
+     if deuda > 0:
+          print(
+               f"{' ':<5}+{deuda}"
+               f"\n{' ':<6}-----"
+               f"\n{' ':<6}{total}"
+          )
+          print(" ")
+          print(" ") 
+
 while True:
      try:
           sorteos = int(input("Cantidad de sorteos a calcular: "))
@@ -101,93 +168,6 @@ print(
 )
 
 
-     
-
-
-def calculo(vendedor):
-     global deuda
-     global contador
-     global ExtraSorteo
-     
-     f1 = f2 = f3 = 0
-     p1 = p2 = p3 = 0
-
-     porcentaje = paga(vendedor)
-     print(vendedor, "tiene una ganancia del", porcentaje,"%")
-
-     SolicitudDatos(sorteos)
-
-     if vendedor == "elena":
-          ElenaExtra(ExtraSorteo)
-
-
-     ventas = Dias["dia1"][0] + Dias["dia2"][0] + Dias["dia3"][0]
-     pagado = ventas * porcentaje
-     decimal = pagado - int(pagado)
-     if decimal <= 0.5:
-          pagado = math.floor(pagado)
-     else:
-          pagado = math.ceil(pagado)
-     restante = Dias["dia1"][1] + Dias["dia2"][1] + Dias["dia3"][1]
-     resto = pagado - restante
-     resultado = resto - ExtraSorteo
-     total = resultado + deuda
-
-     lineas = imprimirDias(Dias,Fechas)
-     print(lineas)
-
-
-     restantes = (   
-          f"{' ':<6}-{restante}"
-          f"\n{' ':<6}-----"
-         f"\n{' ':<6}{resto}"
-     )
-     print(" ")
-     print(vendedor, porcentaje,"%")
-     print(" ")
-
-     indice = 1
-     while indice < 3:
-          if Dias[f"dia{indice}"][0] != 0:
-               print(lineas[f"linea{indice}"])
-          indice += 1
-
-     if Dias["dia1"][0] != 0:
-          print(lineas["linea1"])
-     if Dias["dia2"][0] != 0:
-          print(lineas["linea1"])
-     if Dias["dia3"][0] != 0:
-          print(lineas["linea1"])
-
-
-
-
-     print(
-         f"{' ':<6}----"
-          f"\n{' ':<6}{ventas}"
-          f"\n{' ':<9}x"
-          f"\n{' ':<6}----"
-          f"\n{' ':<6}{pagado}"
-     )
-     if Dias["dia1"][1] > 0 or Dias["dia2"][1] > 0 or Dias["dia3"][1] > 0:
-          print(restantes)
-     if vendedor == "elena":
-          print(
-          f"{' ':<5}-{ExtraSorteo}"
-          f"\n{' ':<6}----"
-          f"\n{' ':<6}{resultado}"
-     )
-     if deuda > 0:
-          print(
-               f"{' ':<5}+{deuda}"
-               f"\n{' ':<6}-----"
-               f"\n{' ':<6}{total}"
-          )
-          print(" ")
-          print(" ") 
-     
-
-
 vendedor = " " 
 while vendedor != "exit":
       while True:
@@ -200,7 +180,7 @@ while vendedor != "exit":
            elif vendedor in ("tere","tola","maribel","luis","carmen","elena","90","27","lupe","norma"):
                 deuda = int(input("Escribe la deuda pendiente: "))
                 print(" ")
-                calculo(vendedor)
+                calculo(vendedor, deuda)
            else:
                 print("vendedor no encontrado, intenta de nuevo.")
           except ValueError:
