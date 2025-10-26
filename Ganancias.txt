@@ -1,0 +1,14 @@
+Ana
+{Edad: 20, Calificacion: 9.5},
+Luis
+{Edad: 22, Calificacion: 8.0},
+Pedro
+{Edad: 19, Calificacion: 6.5},
+Alejandro
+{Edad: 22, Calificacion: 10.0},
+Diego
+{Edad: 19, Calificacion: 10.0},
+Abril
+{Edad: 20, Calificacion: 10.0},
+tere
+{Edad: 24, Calificacion: 10.0}

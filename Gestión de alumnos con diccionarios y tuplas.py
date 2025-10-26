@@ -93,6 +93,7 @@ if len(CalificacionesSobrePromedio) > 1:
 else: 
     print("El alumno con una calificacion mayor al promedio fue:", CalificacionesSobrePromedio[0])
 
+print(Alumnos)
 print("")
 print(sorted(AlumnosTupla, key = lambda x: x[2]))
 

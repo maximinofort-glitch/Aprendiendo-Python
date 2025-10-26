@@ -1,0 +1,14 @@
+Entrada1
+cantidad
+2000
+origen
+donaciones
+fecha
+cualquiera
+Entrada2
+cantidad
+1000
+origen
+apoyo
+fecha
+26/10/2025 12:37:27
