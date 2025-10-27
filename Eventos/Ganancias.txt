@@ -1,14 +1,9 @@
 Entrada1
 cantidad
-2000
+6600
 origen
-donaciones
+400 de cada alumno
+destino
+interior
 fecha
-cualquiera
-Entrada2
-cantidad
-1000
-origen
-apoyo
-fecha
-26/10/2025 12:37:27
+26/10/2025 20:19:00

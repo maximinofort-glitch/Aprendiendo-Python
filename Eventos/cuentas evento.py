@@ -39,24 +39,28 @@ def abrir():
             
         print(len(datos))
         print(lista)
-        for grupo in range(7, len(datos) + 1, 7):
+        if archivo == "Ganancias":
+            rango = 9
+        else:
+            rango = 11
+        for grupo in range(rango, len(datos) + 1, rango):
                 
-            for indice in range(grupo - 6, grupo + 1):
+            for indice in range(grupo - (rango - 1), grupo + 1):
                     
                     
-                if (indice - (7 * ((grupo / 7) - 1))) == 1:
+                if (indice - (rango * ((grupo / rango) - 1))) == 1:
                     clave = datos[indice - 1]
                     Diccionarios[lista][clave] = {}
 
-                elif (indice - (7 * ((grupo / 7) - 1))) in (2, 4, 6,):
+                elif (indice - (rango * ((grupo / rango) - 1))) in (2, 4, 6, 8, 10):
                     dato = datos[indice - 1]
                             
                         
-                elif (indice - (7 * ((grupo / 7) - 1))) in (3, 5, 7):
+                elif (indice - (rango * ((grupo / rango) - 1))) in (3, 5, 7, 9, 11):
                     valor = datos[indice - 1]
                     Diccionarios[lista][clave][dato] = valor
                     print(Diccionarios[lista][clave])
-                if (indice - (7 * ((grupo / 7) - 1))) == 3:
+                if (indice - (rango * ((grupo / rango) - 1))) == 3:
                     int(valor)
                     
             #agarra el ultimo indice de cada grupo, 7, 14, 21, usa ese indice / 7 para saber que numero de grupo es y resta (7 * numero de grupo - 1) a cada indice individual, ejemplo
@@ -75,8 +79,8 @@ def abrir():
     
 
     with open("Indices.txt", "r") as f:
-        indices = [indice.strip() for indice in f.readlines()]
-   
+        indices = [int(indice.strip()) for indice in f.readlines()]
+    print(indices)
     return Diccionarios, indices
 #Empaqueta los diccionarios de Ganancias.txt, Gastos.txt y Total.txt, convirtiendolos en lineas ordenadas de manera especifica para ser desempaquetados en el futuro
 def cerrar(Diccionarios):
@@ -97,29 +101,37 @@ def cerrar(Diccionarios):
                 empaquetado.append(valor)
             
         with open(f"{archivo}.txt", "w") as f:
-            for x in empaquetado[0:(len(empaquetado) - 1)]:
-                f.write(f"{x}\n")
-            f.write(empaquetado[len(empaquetado) - 1])
+            try:
+                for x in empaquetado[0:(len(empaquetado) - 1)]:
+                    f.write(f"{x}\n")
+                f.write(empaquetado[len(empaquetado) - 1])
+            except IndexError:
+                pass
 
     with open("Total.txt", "w") as t:
-        f.write(Diccionarios["total"]["interior"])
-        f.write(Diccionarios["total"]["exterior"])
+        t.write(str(Diccionarios["total"]["interior"]))
+        t.write("\n")
+        t.write(str(Diccionarios["total"]["exterior"]))
 
     with open("Indices.txt", "w") as i:
-        for indice in indices:
-            i.write(indice)
+        try:
+            for indice in indices[0:(len(indices) - 1)]:
+                i.write(f"{indice}\n")
+            i.write(str(indices[len(indices) - 1]))
+        except IndexError:
+            pass
     return True
 
 #Dicta como se imprimen las distintas listas existentes. Es el menu para la funcion revisar en el menu principal
 def revisar(Diccionarios):
     lista = ''
-    while lista != "menu":
+    while True:
         ganancias = f"{color('verde','Ganancias')}: muestra las entradas de las ganancias\n"
         gastos = f"{color('lrojo', 'Gastos')}: Muestra las entradas de los gastos\n"
         total = f"{color('lazul', 'Total')}: Muestra la cantidad de dinero total, la que hay dentro (con la maestra caro) y el exterior (dentro de la caja fuerte)\n"
         modificar = f"{color('cyan', 'Modificar')}: Modifica una entrada anterior (cantidad de dinero, razon o fecha)\n"
         menu = f"{color('azul', 'Menu')}: Vuelve al menu"
-        while lista == '':
+        while True:
             print(
                 f"Listas:\n\n"
                 f"{ganancias if lista != 'ganancias' else ''}"
@@ -129,50 +141,96 @@ def revisar(Diccionarios):
                 f"{menu}\n"
                 )
             lista = input(color("amarillo", "Escribe la lista a revisar: "))
+            if lista != '':
+                break
 
         if lista in ("ganancias", "gastos"):
             for entrada in Diccionarios[lista]:
                 if lista == "ganancias":
-                    print(f"{color('amarillo','Diccionarios')}"     f"[{color('verde', f'{lista}')}]"      f"[{color('amarillo', f'{entrada}')}] = " + "{ ", end = "")
-                    print(f"{color('verde', 'Valor de la ganancia: ')} {Diccionarios[lista][entrada]['cantidad']}, "
-                        f"{Fore.LIGHTMAGENTA_EX}Origen de la {color('verde', 'ganancia:')} {Diccionarios[lista][entrada]['origen']}, ", end = ""
+                    print(f"{color('amarillo','Diccionarios')}"     f"[{color('verde', f'{lista}')}]"      f"[{color('amarillo', f'{entrada}')}] = " + "{ ")
+                    print(
+                        f"{'':<15}{color('verde', 'Valor de la ganancia')} : {Diccionarios[lista][entrada]['cantidad']}, \n"
+                        f"{'':<15}{Fore.LIGHTMAGENTA_EX}Origen de la {color('verde', 'ganancia')} : {Diccionarios[lista][entrada]['origen']}, \n"
+                        f"{'':<15}{color('lcyan','Destino')} : {Diccionarios[lista][entrada]['destino']},"
                         )
                     
                 elif lista == "gastos":
-                    print(f"{color('amarillo','Diccionarios')}"     f"[{color('lrojo', f'{lista}')}]"      f"[{color('amarillo', f'{entrada}')}] = " + "{ ", end = "")
-                    print(f"{color('lrojo', 'Valor del gasto: ')} {Diccionarios[lista][entrada]['cantidad']}, "
-                        f"{Fore.LIGHTMAGENTA_EX}Origen del {color('lrojo', 'ganancia:')} {Diccionarios[lista][entrada]['origen']}, "
-                        f"{color('lcyan', 'Nombre del retirante: ')}{Diccionarios[lista][entrada]['retirante']}", end = ""
+                    print(f"{color('amarillo','Diccionarios')}"     f"[{color('lrojo', f'{lista}')}]"      f"[{color('amarillo', f'{entrada}')}] = " + "{ ")
+                    print(
+                        f"{'':<15}{color('lrojo', 'Valor del gasto')} : {Diccionarios[lista][entrada]['cantidad']},\n"
+                        f"{'':<15}{Fore.LIGHTMAGENTA_EX}Origen del {color('lrojo', 'gasto')} : {Diccionarios[lista][entrada]['origen']},\n"
+                        f"{'':<15}{color('lmagenta','Origen del dinero')} : {Diccionarios[lista][entrada]['destino']}, \n"
+                        f"{'':<15}{color('lcyan', 'Nombre del retirante')} : {Diccionarios[lista][entrada]['retirante']}"
                         )
                 print(
-                    f"{Fore.BLUE}Fecha{Fore.RESET}: {Diccionarios[lista][entrada]['fecha']} " + '}'
+                    f"{'':<15}{Fore.BLUE}Fecha{Fore.RESET}: {Diccionarios[lista][entrada]['fecha']} = \n" + '}'
                     )
             print("")
             input(color("amarillo", "Presiona enter para continuar"))
+            continue
 
         elif lista == "total":
-            #introducir prints para el total
+            print(f"{color('amarillo','Diccionarios')}"     f"[{color('lcyan', f'{lista}')}]" + "{ ")
+            print(
+                f"{color('lrojo', 'Dinero en el interior' )} : {Diccionarios['total']['interior']}\n"
+                f"{color('verde', 'Dinero en el exterior' )} : {Diccionarios['total']['exterior']}\n"
+                f"{color('amarillo', 'Dinero total es')} : {(Diccionarios['total']['interior'] + Diccionarios['total']['exterior'])}\n"
+                "}"
+                )
+            print("")
+            input(color("amarillo", "Presiona enter para continuar"))
+            lista = ''
+            continue
+        elif lista == "modificar":
             None
-        
+        elif lista == "menu":
+            break
         else:
             print(color("amarillo", "porfavor introduce el nombre de una de las siguientes listas"))
             lista = ''
             continue
 
+#def modificar(Diccionarios):
+
+
+def entrada_definicion(accion, Diccionarios):
+    retroceder(accion, "entrada_definicion")
+    if accion == "deposito":
+        lista = "ganancias"
+    elif accion == "retiro":
+        lista = "gastos"
+
+    Diccionarios, indices = añadir_entrada(accion, lista, Diccionarios)
+    return Diccionarios, indices
+
 def añadir_entrada(accion, lista, Diccionarios):
     global indices
-    if accion == "agregar":
-            cantidad = input(color("verde", "Introduce el valor de la ganancia") + ": ")
-            origen = input(Fore.LIGHTBLUE_EX + "Escribe el origen de la ", color("verde", "ganancia") + ": ")
+    if accion == "deposito":
+            while True:
+                try:
+                    cantidad = input(color("verde", "Introduce el valor de la ganancia") + ": ")
+                    int(cantidad)
+                    break
+                except TypeError:
+                    print("Error: No se ha introducido un numero como cantidad")
+                    continue
+            origen = input(f"{color('lazul', 'Escribe el origen de la ')}{color('verde', 'ganancia')}: ")
             destino = input(f"{color('lmagenta', 'Introduce el destino del dinero (exterior o interior)')}: ")
             
             
-    elif accion == "retirar":
-            cantidad = input(f"{Fore.LIGHTRED_EX}Introduce el valor del gasto{Fore.RESET}: ")
-            origen = input(f"{Fore.LIGHTBLUE_EX}Introduce el origen del {Fore.LIGHTRED_EX}gasto{Fore.RESET}: ")
+    elif accion == "retiro":
+            while True:
+                try:
+                    cantidad = input(color("lrojo", "Introduce el valor del gasto") + ": ")
+                    cantidad = -int(cantidad)
+                    break
+                except TypeError:
+                    print("Error: No se ha introducido un numero como cantidad")
+                    continue
+            origen = input(f"{color('lazul', 'Escribe el origen del ')}{color('lrojo', 'gasto')}: ")
             destino = input(f"{color('lmagenta', 'Introduce el origen del dinero (exterior o interior)')}: ")
-            retirante = input(f"{Fore.LIGHTCYAN_EX}Introduce el nombre de quien retira el efectivo{Fore.RESET}: ")
-            cantidad = -int(cantidad)
+            retirante = input(f"{color('lcyan', 'Introduce el nombre de quien retira el efectivo')}: ")
+            
 
     indiceValor = 1
                 
@@ -186,23 +244,23 @@ def añadir_entrada(accion, lista, Diccionarios):
     print("La entrada a introducir sera\n\n")
 
     if lista == "ganancias":
-        print(f"{color('amarillo','Diccionarios')}"     f"[{color('verde', f'{lista}')}]"      f"[{color('amarillo', f'Entrada{indiceValor}')}] = " + "{ ", end = "")
+        print(f"{color('amarillo','Diccionarios')}"     f"[{color('verde', f'{lista}')}]"      f"[{color('amarillo', f'Entrada{indiceValor}')}] = " + "{ ")
         print(
-            f"{color('verde', 'Valor de la ganancia: ')} {cantidad}, "
-            f"{Fore.LIGHTMAGENTA_EX}Origen de la {color('verde', 'ganancia:')} {origen}, "
-            f"{color('lmagenta','Destino')}: {destino}", end = ""
+            f"{'':<15}{color('verde', 'Valor de la ganancia')} : {cantidad}, \n"
+            f"{'':<15}{Fore.LIGHTMAGENTA_EX}Origen de la {color('verde', 'ganancia')} : {origen}, \n"
+            f"{'':<15}{color('lcyan','Destino')} : {destino},"
             )
         
     elif lista == "gastos":
-        print(f"{color('amarillo','Diccionarios')}"     f"[{color('lrojo', f'{lista}')}]"      f"[{color('amarillo', f'Entrada{indiceValor}')}] = " + "{ ", end = "")
+        print(f"{color('amarillo','Diccionarios')}"     f"[{color('lrojo', f'{lista}')}]"      f"[{color('amarillo', f'Entrada{indiceValor}')}] = " + "{ ")
         print(
-            f"{color('lrojo', 'Valor del gasto: ')} {cantidad}, "
-            f"{Fore.LIGHTMAGENTA_EX}Origen del {color('lrojo', 'gasto:')} {origen}, "
-            f"{color('lmagenta','Destino')}: {destino}"
-            f"{color('lcyan', 'Nombre del retirante: ')}{retirante}", end = ""
+            f"{'':<15}{color('lrojo', 'Valor del gasto')} : {cantidad},\n"
+            f"{'':<15}{Fore.LIGHTMAGENTA_EX}Origen del {color('lrojo', 'gasto')} : {origen},\n"
+            f"{'':<15}{color('lmagenta','Origen del dinero')} : {destino}, \n"
+            f"{'':<15}{color('lcyan', 'Nombre del retirante')} : {retirante}"
             )
     print(
-        f"{Fore.BLUE}Fecha{Fore.RESET}: {datetime.now().strftime("%d/%m/%Y %H:%M:%S")} " + '}'
+        f"{'':<15}{Fore.BLUE}Fecha{Fore.RESET}: {datetime.now().strftime("%d/%m/%Y %H:%M:%S")}\n" + f"{'':<15}" + '}'
         )
     print("")
                 
@@ -214,35 +272,26 @@ def añadir_entrada(accion, lista, Diccionarios):
                 "cantidad" : f"{cantidad}",
                 "origen" : f"{origen}",
                 "destino" : f"{destino}",
-                **({"retirante": f'retirante'} if accion == "retirar" else {}),
+                **({"retirante": f'retirante'} if accion == "retiro" else {}),
                 "fecha" : f"{datetime.now().strftime('%d/%m/%Y %H:%M:%S')}"
                 }
-            Diccionarios["total"][destino] -= cantidad
+            indices.append(indiceValor)
+            Diccionarios["total"][destino] += int(cantidad)
             print("")
             print(f"La entrada{indiceValor}:\n" 
                 f"{Diccionarios[lista][f'Entrada{indiceValor}']}\n"
                 )
             print("Se ha introducido exitosamente")
             print("Volviendo al menú...")
-            return Diccionarios
+            return Diccionarios, indices
         
         elif confirmacion == "no":
             Diccionarios = añadir_entrada(accion, lista, Diccionarios)
-            return Diccionarios
+            return Diccionarios, indices
         
         else:
             print("Error: Solo se acepta un si o un no como respuesta\n")
             continue
-
-def entrada_definicion(accion, Diccionarios):
-    retroceder(accion, "entrada_definicion")
-    if accion == "agregar":
-        lista = "ganancias"
-    elif accion == "retirar":
-        lista = "gastos"
-
-    Diccionarios = añadir_entrada(accion, lista, Diccionarios)
-    return Diccionarios
 
 def retroceder(entrada, funcion):
     
@@ -253,8 +302,6 @@ def retroceder(entrada, funcion):
     elif entrada == "menu":
         return main()
     return False
-
-
 
 def main():
     global Diccionarios
@@ -273,17 +320,8 @@ def main():
                        )
         print("")
         if accion == "entrada":
-            accion = input(
-                        f"{Fore.LIGHTGREEN_EX}Agregar: " f"{Fore.RESET}Añade dinero a la cuenta\n"
-                        f"{Fore.RED}Retirar: " f"{Fore.RESET}Quita dinero de la cuenta\n{Fore.RESET}"
-                        f"{Fore.YELLOW}\n\nEscribe tu accion: {Fore.RESET}"
-                    )
-            if accion in ("agregar" , "retirar"):
-                entrada_definicion(accion, Diccionarios)
+            entrada_definicion(Diccionarios)
                 
-            elif accion == "retirar":
-                
-                None
 
 
 
@@ -304,14 +342,8 @@ def main():
         else:
             print("No se ha introducido una opcion valida. Favor de intentar nuevamente")
 
-
-
-
-
 Diccionarios, indices = abrir()
-
-
-    
+  
 print("")
 print("")
 while True:

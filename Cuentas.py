@@ -126,7 +126,8 @@ def calculo(vendedor, deuda):
           f"\n{' ':<6}----"
           f"\n{' ':<6}{pagado}"
      )
-     print(restantes)
+     if restante >0:
+          print(restantes)
      if vendedor == "elena":
           print(
           f"{' ':<5}-{ExtraSorteo}"
