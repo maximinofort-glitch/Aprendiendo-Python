@@ -2,7 +2,8 @@ from datetime import datetime
 from colorama import init, Fore, Style
 import os
 
-os.chdir(r"C:\Users\maxim\OneDrive\Documentos\Codigos\Eventos")
+#os.chdir(r"C:\Users\maxim\OneDrive\Documentos\Codigos\Eventos")
+os.chdir(r"C:\Users\maxim\Documents\Aprendiendo-Python\Eventos")
 colores = {
     "amarillo" : Fore.YELLOW,
     "azul" : Fore.BLUE,
@@ -67,6 +68,7 @@ def abrir():
                     print(Diccionarios[lista][clave])
                 if (indice - (rango * ((grupo / rango) - 1))) == 3:
                     int(valor)
+            #este metodo puede ser acortado haciendo que automaticamente se creen las claves "destino, cantidad, origen, retirante y fecha, de manera que no tienen que venir incluidos y repetidos por cada grupo dentro de los txt"
                     
             #agarra el ultimo indice de cada grupo, 7, 14, 21, usa ese indice / 7 para saber que numero de grupo es y resta (7 * numero de grupo - 1) a cada indice individual, ejemplo
             # 8 - (7 * ((indice / 7) - 1)) indice valdria 14 por lo que seria 8 - (7 * ((14 / 7 ) - 1)), 8 - (7 * (2 - 1) queda 8 - (7) = 1, el cual es el equivalente a el 1 del primer grupo, 
@@ -76,14 +78,15 @@ def abrir():
             # seran el tipo de dato y 2 junto con los pares seran valores, esto hasta el numero 7 donde comeinza un nuevo grupo, los grupos irian 
             # 0,1,2,3,4,5,6 de ahi 7,8,9,10,11,12,13 y comenzaroa por 14 el siguiente y termina en 20 
             # 1,2,3,4,5,6,7 de ahi 8,9,10,11,12,13,14
+    with open("Indices.txt", "r") as i:
+        indices = [int(linea.strip()) for linea in i.readlines()]
 
-    with open(f"Total.txt", "r") as f:
+
+    with open("Total.txt", "r") as f:
         datos = [linea.strip() for linea in f.readlines()]
     Diccionarios["total"]["interior"] = int(datos[0])
     Diccionarios["total"]["exterior"] = int(datos[1])
-    
-
-    
+    return Diccionarios, indices
 #Empaqueta los diccionarios de Ganancias.txt, Gastos.txt y Total.txt, convirtiendolos en lineas ordenadas de manera especifica para ser desempaquetados en el futuro
 def cerrar(Diccionarios):
     global indices
@@ -131,10 +134,8 @@ def revisar(Diccionarios):
     gastos = f"{color('lrojo', 'Gastos')}: Muestra las entradas de los gastos\n"
     total = f"{color('lazul', 'Total')}: Muestra la cantidad de dinero total, la que hay dentro (con la maestra caro) y el exterior (dentro de la caja fuerte)\n"
     papelera = f"{color('negro', 'Papelera')}: Muestra las entradas que han sido borradas en el pasado\n"
-    modificar = f"{color('cyan', 'Modificar')}: Modifica una entrada anterior (cantidad de dinero, razon o fecha)\n"
     menu = f"{color('azul', 'Menu')}: Vuelve al menu"
     while lista != "menu":
-        
         while True:
             print(
                 f"Listas:\n\n"
@@ -142,7 +143,6 @@ def revisar(Diccionarios):
                 f"{gastos if lista != 'gastos' else ''}"
                 f"{total if lista != 'total' else ''}"
                 f"{papelera if lista != 'papelera' else ''}\n"
-                f"{modificar if lista != '' else ''}"
                 f"{menu}\n"
                 )
             lista = ''
@@ -153,16 +153,15 @@ def revisar(Diccionarios):
 
         if lista in ("ganancias", "gastos"):
             for entrada in Diccionarios[lista]:
-                imprimir_listas(lista, entrada, Diccionarios)  
-            input(color("amarillo", "Presiona enter para continuar"))
-            continue
+                imprimir_listas(lista, entrada, Diccionarios) 
+                
 
 
         elif lista == "papelera":
             for entrada in sorted(Diccionarios[lista], key=lambda x: int(x[11:])):
                 imprimir_listas(lista, entrada, Diccionarios)
-            input(color("amarillo", "Presiona enter para continuar"))
-            continue
+            
+            
 
         elif lista == "total":
             print(f"{color('amarillo','Diccionarios')}"     f"[{color('lcyan', f'{lista}')}]" + "{ ")
@@ -176,17 +175,61 @@ def revisar(Diccionarios):
             input(color("amarillo", "Presiona enter para continuar"))
             lista = ''
             continue
-        elif lista == "modificar" and accion in ("ganancias", "gastos", "papelera"):
-            #hacer que si accion es = papelera haya una opcion de recuperar
-            accion = input(
-                f"{color('amarillo', 'Editar')}: Edita datos especificos de una entrada\n"
-                f"{color('lrojo', 'Borrar')}: Borra una entrada existente y la agrega a la papelera"
-            )
-            #introducir la funcion modificar en si, ya para borrar, editar y tal ves recuperar en esa misma funcion
+            
+            #introducir la funcion modificar en si, ya sea para borrar, editar y tal ves recuperar en esa misma funcion
         elif lista != "menu":
             print(color("amarillo", "porfavor introduce el nombre de una de las siguientes listas"))
             lista = ''
             continue
+
+        if  lista != "menu":
+            confirmacion = input(
+                f"Escribe {color('verde', ''' 'si ' ''')} para modificar algun dato (cantidad, razon, origen, destino) de alguna entrada de la lista \n"
+                f"En caso contrario presiona {color('amarillo', 'enter')}: "
+                )
+            if confirmacion == "si":  
+                    modificar(lista, Diccionarios)
+                    lista = ''
+                    continue
+        else:
+            lista = ''
+            continue
+
+def modificar(lista, Diccionarios):
+    if lista in ("ganancias", "gastos"):
+        for entrada in Diccionarios[lista]:
+            imprimir_listas(lista, entrada, Diccionarios) 
+
+
+    elif lista == "papelera":
+        for entrada in sorted(Diccionarios[lista], key=lambda x: int(x[11:])):
+            imprimir_listas(lista, entrada, Diccionarios)
+
+    
+    entrada = input("Selecciona una entrada basada en su numero")
+    print(f"Se ha seleccinado la entarda{entrada}:")
+    imprimir_listas(lista, f"entrada{entrada}", Diccionarios)
+
+while True
+    print("¿Que deseas hacer con la entrada?")
+    accion = input(
+    f"{color('amarillo', 'Editar')}: Edita datos especificos de una entrada"
+    f"{color('lrojo', 'Borrar')}: Borra una entrada existente y la agrega a la papelera\n"
+    f"{color('lcyan', 'cancelar')}: Cancela la seleccion y vuelve a seleccionar una entrada"
+    f"{color('lmagenta', 'Volver')}: Vuelve a la lista de listas"
+    f"{color('azul', 'Menu')}: Vuelve al menu"
+    )
+    if accion == "borrar":
+       confirmacion = input(f"Escribe {color('lrojo', ''' 'borrar' ''')} para confirmar la eliminacion de la entrada")
+       if confirmacion == "borrar":
+        del Diccionarios[lista][f"entrada{entrada}"]
+        break
+    else:
+        continue
+
+
+            
+        
 
 def imprimir_listas(lista, entrada, Diccionarios):
     if lista == "papelera":
@@ -213,8 +256,6 @@ def imprimir_listas(lista, entrada, Diccionarios):
         f"{'':<15}{Fore.BLUE}Fecha{Fore.RESET}: {Diccionarios[lista][entrada]['fecha']} = \n" + '}'
         )
     print("")
-
-#def modificar(Diccionarios):
 
 
 def entrada_definicion(accion, Diccionarios):
