@@ -13,7 +13,8 @@ colores = {
     "cyan" : Fore.CYAN,
     "lcyan" : Fore.LIGHTCYAN_EX,
     "lmagenta" : Fore.LIGHTMAGENTA_EX,
-    "magenta" : Fore.MAGENTA
+    "magenta" : Fore.MAGENTA,
+    "negro" : Fore.BLACK
 }
 def color(color_escogido, texto):
     global colores
@@ -26,20 +27,24 @@ def abrir():
     Diccionarios = {
     "ganancias" : {},
     "gastos" : {},
+    "papelera" : {},
     "total" : {
         "interior" : 0,
         "exterior" : 0
     }
     }
-    for archivo in ("Ganancias", "Gastos"):
+    for archivo in ("Ganancias", "Gastos", "Ganancias_Papelera", "Gastos_Papelera"):
         with open(f"{archivo}.txt", "r") as f:
             datos = [linea.strip() for linea in f.readlines()]
-        lista = archivo.lower()
+        if archivo in ("Ganancias_Papelera", "Gastos_Papelera"):
+            lista = "papelera"
+        else:
+            lista = archivo.lower()
             
             
         print(len(datos))
         print(lista)
-        if archivo == "Ganancias":
+        if archivo in ("Ganancias", "Ganancias_Papelera"):
             rango = 9
         else:
             rango = 11
@@ -78,14 +83,11 @@ def abrir():
     Diccionarios["total"]["exterior"] = int(datos[1])
     
 
-    with open("Indices.txt", "r") as f:
-        indices = [int(indice.strip()) for indice in f.readlines()]
-    print(indices)
-    return Diccionarios, indices
+    
 #Empaqueta los diccionarios de Ganancias.txt, Gastos.txt y Total.txt, convirtiendolos en lineas ordenadas de manera especifica para ser desempaquetados en el futuro
 def cerrar(Diccionarios):
     global indices
-    for archivo in ("Ganancias", "Gastos"):
+    for archivo in ("Ganancias", "Gastos", "Ganancias_Papelera", "Gastos_Papelera"):
         empaquetado = []
         lista = archivo.lower()
         for entrada in Diccionarios[lista]:
@@ -125,47 +127,40 @@ def cerrar(Diccionarios):
 #Dicta como se imprimen las distintas listas existentes. Es el menu para la funcion revisar en el menu principal
 def revisar(Diccionarios):
     lista = ''
-    while True:
-        ganancias = f"{color('verde','Ganancias')}: muestra las entradas de las ganancias\n"
-        gastos = f"{color('lrojo', 'Gastos')}: Muestra las entradas de los gastos\n"
-        total = f"{color('lazul', 'Total')}: Muestra la cantidad de dinero total, la que hay dentro (con la maestra caro) y el exterior (dentro de la caja fuerte)\n"
-        modificar = f"{color('cyan', 'Modificar')}: Modifica una entrada anterior (cantidad de dinero, razon o fecha)\n"
-        menu = f"{color('azul', 'Menu')}: Vuelve al menu"
+    ganancias = f"{color('verde','Ganancias')}: Muestra las entradas de las ganancias\n"
+    gastos = f"{color('lrojo', 'Gastos')}: Muestra las entradas de los gastos\n"
+    total = f"{color('lazul', 'Total')}: Muestra la cantidad de dinero total, la que hay dentro (con la maestra caro) y el exterior (dentro de la caja fuerte)\n"
+    papelera = f"{color('negro', 'Papelera')}: Muestra las entradas que han sido borradas en el pasado\n"
+    modificar = f"{color('cyan', 'Modificar')}: Modifica una entrada anterior (cantidad de dinero, razon o fecha)\n"
+    menu = f"{color('azul', 'Menu')}: Vuelve al menu"
+    while lista != "menu":
+        
         while True:
             print(
                 f"Listas:\n\n"
                 f"{ganancias if lista != 'ganancias' else ''}"
                 f"{gastos if lista != 'gastos' else ''}"
-                f"{total if lista != 'total' else ''}\n"
+                f"{total if lista != 'total' else ''}"
+                f"{papelera if lista != 'papelera' else ''}\n"
                 f"{modificar if lista != '' else ''}"
                 f"{menu}\n"
                 )
+            lista = ''
+            accion = lista
             lista = input(color("amarillo", "Escribe la lista a revisar: "))
             if lista != '':
                 break
 
         if lista in ("ganancias", "gastos"):
             for entrada in Diccionarios[lista]:
-                if lista == "ganancias":
-                    print(f"{color('amarillo','Diccionarios')}"     f"[{color('verde', f'{lista}')}]"      f"[{color('amarillo', f'{entrada}')}] = " + "{ ")
-                    print(
-                        f"{'':<15}{color('verde', 'Valor de la ganancia')} : {Diccionarios[lista][entrada]['cantidad']}, \n"
-                        f"{'':<15}{Fore.LIGHTMAGENTA_EX}Origen de la {color('verde', 'ganancia')} : {Diccionarios[lista][entrada]['origen']}, \n"
-                        f"{'':<15}{color('lcyan','Destino')} : {Diccionarios[lista][entrada]['destino']},"
-                        )
-                    
-                elif lista == "gastos":
-                    print(f"{color('amarillo','Diccionarios')}"     f"[{color('lrojo', f'{lista}')}]"      f"[{color('amarillo', f'{entrada}')}] = " + "{ ")
-                    print(
-                        f"{'':<15}{color('lrojo', 'Valor del gasto')} : {Diccionarios[lista][entrada]['cantidad']},\n"
-                        f"{'':<15}{Fore.LIGHTMAGENTA_EX}Origen del {color('lrojo', 'gasto')} : {Diccionarios[lista][entrada]['origen']},\n"
-                        f"{'':<15}{color('lmagenta','Origen del dinero')} : {Diccionarios[lista][entrada]['destino']}, \n"
-                        f"{'':<15}{color('lcyan', 'Nombre del retirante')} : {Diccionarios[lista][entrada]['retirante']}"
-                        )
-                print(
-                    f"{'':<15}{Fore.BLUE}Fecha{Fore.RESET}: {Diccionarios[lista][entrada]['fecha']} = \n" + '}'
-                    )
-            print("")
+                imprimir_listas(lista, entrada, Diccionarios)  
+            input(color("amarillo", "Presiona enter para continuar"))
+            continue
+
+
+        elif lista == "papelera":
+            for entrada in sorted(Diccionarios[lista], key=lambda x: int(x[11:])):
+                imprimir_listas(lista, entrada, Diccionarios)
             input(color("amarillo", "Presiona enter para continuar"))
             continue
 
@@ -181,19 +176,53 @@ def revisar(Diccionarios):
             input(color("amarillo", "Presiona enter para continuar"))
             lista = ''
             continue
-        elif lista == "modificar":
-            None
-        elif lista == "menu":
-            break
-        else:
+        elif lista == "modificar" and accion in ("ganancias", "gastos", "papelera"):
+            #hacer que si accion es = papelera haya una opcion de recuperar
+            accion = input(
+                f"{color('amarillo', 'Editar')}: Edita datos especificos de una entrada\n"
+                f"{color('lrojo', 'Borrar')}: Borra una entrada existente y la agrega a la papelera"
+            )
+            #introducir la funcion modificar en si, ya para borrar, editar y tal ves recuperar en esa misma funcion
+        elif lista != "menu":
             print(color("amarillo", "porfavor introduce el nombre de una de las siguientes listas"))
             lista = ''
             continue
+
+def imprimir_listas(lista, entrada, Diccionarios):
+    if lista == "papelera":
+        identificador = len(entrada)
+    else:
+        identificador = 0
+    if lista == "ganancias" or identificador == 4:
+        print(f"{color('amarillo','Diccionarios')}"     f"[{color('verde', f'{lista}')}]"      f"[{color('amarillo', f'{entrada}')}] = " + "{ ")
+        print(
+            f"{'':<15}{color('verde', 'Valor de la ganancia')} : {Diccionarios[lista][entrada]['cantidad']}, \n"
+            f"{'':<15}{Fore.LIGHTMAGENTA_EX}Origen de la {color('verde', 'ganancia')} : {Diccionarios[lista][entrada]['origen']}, \n"
+            f"{'':<15}{color('lcyan','Destino')} : {Diccionarios[lista][entrada]['destino']},"
+            )
+        
+    elif lista == "gastos" or identificador == 5:
+        print(f"{color('amarillo','Diccionarios')}"     f"[{color('lrojo', f'{lista}')}]"      f"[{color('amarillo', f'{entrada}')}] = " + "{ ")
+        print(
+            f"{'':<15}{color('lrojo', 'Valor del gasto')} : {Diccionarios[lista][entrada]['cantidad']},\n"
+            f"{'':<15}{Fore.LIGHTMAGENTA_EX}Origen del {color('lrojo', 'gasto')} : {Diccionarios[lista][entrada]['origen']},\n"
+            f"{'':<15}{color('lmagenta','Origen del dinero')} : {Diccionarios[lista][entrada]['destino']}, \n"
+            f"{'':<15}{color('lcyan', 'Nombre del retirante')} : {Diccionarios[lista][entrada]['retirante']}"
+            )
+    print(
+        f"{'':<15}{Fore.BLUE}Fecha{Fore.RESET}: {Diccionarios[lista][entrada]['fecha']} = \n" + '}'
+        )
+    print("")
 
 #def modificar(Diccionarios):
 
 
 def entrada_definicion(accion, Diccionarios):
+    accion = input(
+                f"{Fore.LIGHTGREEN_EX}Deposito: " f"{Fore.RESET}Añade dinero a la cuenta\n"
+                f"{Fore.RED}Retiro: " f"{Fore.RESET}Quita dinero de la cuenta\n{Fore.RESET}"
+                f"{Fore.YELLOW}\n\nEscribe tu accion: {Fore.RESET}"
+                )
     retroceder(accion, "entrada_definicion")
     if accion == "deposito":
         lista = "ganancias"
@@ -354,3 +383,8 @@ while True:
     else:
         continue
     
+
+
+#los indices no se guardan al borrar, se usa la funcion pop para unicamente tener los diccioanrios dentro de la entrada sin la entrada, 
+# esto se guarda en una lista aparte como ganancias, total y gastos, si se quiere recuperar una entrada de usara una nueva funcion que 
+# buscara un idnice disponible y confirmara la recuperacion de la entrada al mismo tiempo que menciona cual sera su nuevo nombre / indice
