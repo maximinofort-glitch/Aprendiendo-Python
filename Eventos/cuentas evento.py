@@ -11,6 +11,7 @@ colores = {
     "rojo" : Fore.RED,
     "lrojo" : Fore.LIGHTRED_EX,
     "verde" : Fore.GREEN,
+    "lverde" : Fore.LIGHTGREEN_EX,
     "cyan" : Fore.CYAN,
     "lcyan" : Fore.LIGHTCYAN_EX,
     "lmagenta" : Fore.LIGHTMAGENTA_EX,
@@ -90,10 +91,17 @@ def abrir():
 #Empaqueta los diccionarios de Ganancias.txt, Gastos.txt y Total.txt, convirtiendolos en lineas ordenadas de manera especifica para ser desempaquetados en el futuro
 def cerrar(Diccionarios):
     global indices
-    for archivo in ("Ganancias", "Gastos", "Ganancias_Papelera", "Gastos_Papelera"):
+    for archivo in ("Ganancias", "Gastos", "Papelera"):
         empaquetado = []
+        
         lista = archivo.lower()
+
         for entrada in Diccionarios[lista]:
+            if archivo == "Papelera":
+                if entrada[0] == "+":
+                    archivo = "Ganancias_Papelera"
+                elif entrada[0] == "-":
+                    archivo = "Gastos_Papelera"
             clave = f"{entrada}"
             
             empaquetado.append(clave)
@@ -158,7 +166,7 @@ def revisar(Diccionarios):
 
 
         elif lista == "papelera":
-            for entrada in sorted(Diccionarios[lista], key=lambda x: int(x[11:])):
+            for entrada in sorted(Diccionarios[lista], key=lambda x: int(x[8:])):
                 imprimir_listas(lista, entrada, Diccionarios)
             
             
@@ -202,32 +210,79 @@ def modificar(lista, Diccionarios):
 
 
     elif lista == "papelera":
-        for entrada in sorted(Diccionarios[lista], key=lambda x: int(x[11:])):
+        for entrada in sorted(Diccionarios[lista], key=lambda x: int(x[12:])):
             imprimir_listas(lista, entrada, Diccionarios)
 
     
-    entrada = input("Selecciona una entrada basada en su numero")
-    print(f"Se ha seleccinado la entarda{entrada}:")
-    imprimir_listas(lista, f"entrada{entrada}", Diccionarios)
-
-while True
-    print("¿Que deseas hacer con la entrada?")
-    accion = input(
-    f"{color('amarillo', 'Editar')}: Edita datos especificos de una entrada"
-    f"{color('lrojo', 'Borrar')}: Borra una entrada existente y la agrega a la papelera\n"
-    f"{color('lcyan', 'cancelar')}: Cancela la seleccion y vuelve a seleccionar una entrada"
-    f"{color('lmagenta', 'Volver')}: Vuelve a la lista de listas"
-    f"{color('azul', 'Menu')}: Vuelve al menu"
-    )
-    if accion == "borrar":
-       confirmacion = input(f"Escribe {color('lrojo', ''' 'borrar' ''')} para confirmar la eliminacion de la entrada")
-       if confirmacion == "borrar":
-        del Diccionarios[lista][f"entrada{entrada}"]
-        break
+    seleccion = input("Selecciona una entrada basada en su numero")
+    if lista == "papelera":
+        while True:
+            for entrada in Diccionarios["papelera"]:
+                if seleccion == entrada[8:] and entrada[0] == "-":
+                    entrada = f"-Entrada{seleccion}"
+                    break
+                elif seleccion == entrada[8:] and entrada[0] == "+":
+                    entrada = f"+Entrada{seleccion}"
+                    break
+                else:
+                    continue
+            break
+        
     else:
-        continue
+        entrada = f"Entrada{entrada}"
+    print(f"Se ha seleccinado la entarda ' {entrada} ':")
+    imprimir_listas(lista, entrada, Diccionarios)
 
 
+    editar = f"{color('amarillo', 'Editar')}: Edita datos especificos de una entrada"
+    borrar = f"{color('lrojo', 'Borrar')}: Borra una entrada existente y la agrega a la papelera"
+    recuperar = f"{color('verde', 'Recuperar')}: Devuelve la entrada seleccionada a su lista original (Ganancias o gastos) con un nuevo numero de entrada\n"
+    cancelar = f"{color('lcyan', 'Cancelar')}: Cancela la seleccion y vuelve a seleccionar una entrada"
+    volver = f"{color('lmagenta', 'Volver')}: Vuelve a la lista de listas"
+    menu = f"{color('azul', 'Menu')}: Vuelve al menu"
+
+    while True:
+        print("¿Que deseas hacer con la entrada?")
+        
+        accion = input(
+        f"{editar}"
+        f"{borrar}"
+        f"{recuperar if lista == 'papelera' else ''}"
+        f"{cancelar}"
+        f"{volver}"
+        f"{menu}"
+        )
+        if accion == "borrar":
+            confirmacion = input(f"Escribe {color('lrojo', ''' 'borrar' ''')} para confirmar la eliminacion {color('rojo', {'DEFINITIVA' if lista == 'papelera' else ''})} de la entrada")
+            if confirmacion == "borrar":
+                if lista == "papelera":
+                    del Diccionarios[lista][entrada]
+                elif lista == "ganancias":
+                    entrada_borrada = Diccionarios["ganancias"].pop(entrada)
+                    Diccionarios["papelera"][entrada] = entrada_borrada
+                elif lista == "gastos":
+                    entrada_borrada = Diccionarios["gastos"].pop(entrada)
+                    Diccionarios["papelera"][entrada] = entrada_borrada
+                print(f"La entrada ha sido borrada {color('rojo', 'definitivamente' if lista == 'papelera' else '')} de manera exitosa")
+                break
+
+
+        elif accion == "editar":
+            imprimir_listas(lista, f"Entrada{entrada}", Diccionarios)
+            dato = input(f"Elige el dato a modificar (Cantidad, Origen, Destino{', Retirante' if lista == 'gastos' else ''})")
+            valor = input(f"Escribe el nuevo valor de la clave {dato}")
+            confirmacion = input(f"¿Estas seguro de reemplazar\n {dato} : {Diccionarios[lista][entrada]} por {dato} : {valor}?")
+            if confirmacion == "si":
+                Diccionarios[lista][entrada][dato] = valor
+                break
+            else:
+                continue
+        else:
+            continue
+#si quiero recuperar una entrada actualmente hay un+ o - al inicio del nombre de la clave ejemplo: "+Entrada200" necesito quitar el + o - al recuperar una entrada
+#hice que independientemente de si la entrada tiene +, - o ninguna se guarde la enyrada en si como la variable entrada dependiendo unicamente de la lista de donde 
+# se saco y suprimer valor en caso de haber llegado desde papelera, ahora mismmo estoy en el apso de confirmacion de sobreescritura del valor del dato que se selecciono,
+#creo que ya lo hice pero puede que haya conflictos con si es - o + si viene de papelera, si noe s el caso toca hacer lasd funciones de recuperar, cancelar, volver y el menu
             
         
 
@@ -237,7 +292,7 @@ def imprimir_listas(lista, entrada, Diccionarios):
     else:
         identificador = 0
     if lista == "ganancias" or identificador == 4:
-        print(f"{color('amarillo','Diccionarios')}"     f"[{color('verde', f'{lista}')}]"      f"[{color('amarillo', f'{entrada}')}] = " + "{ ")
+        print(f"{color('amarillo','Diccionarios')}"     f"[{color('lverde', f'{lista}')}]"      f"[{color('verde', '+')}{color('amarillo', f'{entrada}')}] = " + "{ ")
         print(
             f"{'':<15}{color('verde', 'Valor de la ganancia')} : {Diccionarios[lista][entrada]['cantidad']}, \n"
             f"{'':<15}{Fore.LIGHTMAGENTA_EX}Origen de la {color('verde', 'ganancia')} : {Diccionarios[lista][entrada]['origen']}, \n"
@@ -245,7 +300,7 @@ def imprimir_listas(lista, entrada, Diccionarios):
             )
         
     elif lista == "gastos" or identificador == 5:
-        print(f"{color('amarillo','Diccionarios')}"     f"[{color('lrojo', f'{lista}')}]"      f"[{color('amarillo', f'{entrada}')}] = " + "{ ")
+        print(f"{color('amarillo','Diccionarios')}"     f"[{color('lrojo', f'{lista}')}]"      f"[{color('rojo', '-')}{color('amarillo', f'{entrada}')}] = " + "{ ")
         print(
             f"{'':<15}{color('lrojo', 'Valor del gasto')} : {Diccionarios[lista][entrada]['cantidad']},\n"
             f"{'':<15}{Fore.LIGHTMAGENTA_EX}Origen del {color('lrojo', 'gasto')} : {Diccionarios[lista][entrada]['origen']},\n"
@@ -314,7 +369,7 @@ def añadir_entrada(accion, lista, Diccionarios):
     print("La entrada a introducir sera\n\n")
 
     if lista == "ganancias":
-        print(f"{color('amarillo','Diccionarios')}"     f"[{color('verde', f'{lista}')}]"      f"[{color('amarillo', f'Entrada{indiceValor}')}] = " + "{ ")
+        print(f"{color('amarillo','Diccionarios')}"     f"[{color('lverde', f'{lista}')}]"      f"[{color('verde', '+')}{color('amarillo', f'Entrada{indiceValor}')}] = " + "{ ")
         print(
             f"{'':<15}{color('verde', 'Valor de la ganancia')} : {cantidad}, \n"
             f"{'':<15}{Fore.LIGHTMAGENTA_EX}Origen de la {color('verde', 'ganancia')} : {origen}, \n"
@@ -322,7 +377,7 @@ def añadir_entrada(accion, lista, Diccionarios):
             )
         
     elif lista == "gastos":
-        print(f"{color('amarillo','Diccionarios')}"     f"[{color('lrojo', f'{lista}')}]"      f"[{color('amarillo', f'Entrada{indiceValor}')}] = " + "{ ")
+        print(f"{color('amarillo','Diccionarios')}"     f"[{color('lrojo', f'{lista}')}]"      f"[{color('rojo', '-')}{color('amarillo', f'Entrada{indiceValor}')}] = " + "{ ")
         print(
             f"{'':<15}{color('lrojo', 'Valor del gasto')} : {cantidad},\n"
             f"{'':<15}{Fore.LIGHTMAGENTA_EX}Origen del {color('lrojo', 'gasto')} : {origen},\n"
