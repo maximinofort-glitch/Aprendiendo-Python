@@ -1,9 +1,9 @@
-Entrada1
-cantidad
-6600
-origen
-400 de cada alumno
-destino
-interior
++Entrada2
+monto
+3000
+concepto
+no se
+ubicacion
+exterior
 fecha
-26/10/2025 20:19:00
+29/10/2025 23:46:59
