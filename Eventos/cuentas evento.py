@@ -2,8 +2,8 @@ from datetime import datetime
 from colorama import init, Fore, Style
 import os
 
-os.chdir(r"C:\Users\maxim\OneDrive\Documentos\Codigos\Eventos")
-#os.chdir(r"C:\Users\maxim\Documents\Aprendiendo-Python\Eventos")
+#gos.chdir(r"C:\Users\maxim\OneDrive\Documentos\Codigos\Eventos")
+os.chdir(r"C:\Users\maxim\Documents\Aprendiendo-Python\Eventos")
 colores = {
     "amarillo" : Fore.YELLOW,
     "azul" : Fore.BLUE,

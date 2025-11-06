@@ -1,9 +1,36 @@
-+Entrada2
++Entrada3
 monto
-3000
+11180
 concepto
-no se
+86 entradas vendidas
 ubicacion
 exterior
 fecha
-29/10/2025 23:46:59
+30/10/2025 08:44:07
++Entrada4
+monto
+6600
+concepto
+juntados por los 400 por alumno
+ubicacion
+interior
+fecha
+30/10/2025 08:44:52
++Entrada5
+monto
+350
+concepto
+7 entradas para el torneo de clash pagadas (hay como 4 mas que seguramente paguen)
+ubicacion
+exterior
+fecha
+30/10/2025 08:45:56
++Entrada6
+monto
+490
+concepto
+14
+ubicacion
+exterior
+fecha
+30/10/2025 08:46:42

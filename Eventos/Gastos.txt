@@ -1,0 +1,99 @@
+-Entrada7
+monto
+-334
+concepto
+46x5 de rollos de basura 90x120 y 104 cinta para ducto/gris
+ubicacion
+exterior
+retirante
+retirante
+fecha
+30/10/2025 14:07:46
+-Entrada8
+monto
+-184
+concepto
+primeros 4 rollos de basura x 46 de tamaño 90x120
+ubicacion
+exterior
+retirante
+retirante
+fecha
+30/10/2025 14:08:55
+-Entrada9
+monto
+-490
+concepto
+53 de servilletas, 75 de vasos de plastico, 61 de charolas, 10 de una bolsa chica 58 de dos cortinas naranjas, 20 pesos banderitas feliz halloween, 116 de 4 telas de araña y 98 de dos tiras guia de halloween
+ubicacion
+exterior
+retirante
+retirante
+fecha
+30/10/2025 14:18:00
+-Entrada10
+monto
+-42
+concepto
+botecito de pintura roja
+ubicacion
+exterior
+retirante
+retirante
+fecha
+30/10/2025 14:33:35
+-Entrada11
+monto
+-120
+concepto
+cinta precaucion, pita y cinta masking
+ubicacion
+exterior
+retirante
+retirante
+fecha
+30/10/2025 14:34:36
+-Entrada12
+monto
+-230
+concepto
+5 rollos de basura que se compraron despues de los primeros 4
+ubicacion
+exterior
+retirante
+retirante
+fecha
+30/10/2025 14:36:12
+-Entrada13
+monto
+-67
+concepto
+pinturas rojas
+ubicacion
+exterior
+retirante
+retirante
+fecha
+30/10/2025 14:36:44
+-Entrada14
+monto
+-100
+concepto
+palomitas
+ubicacion
+exterior
+retirante
+retirante
+fecha
+30/10/2025 14:38:35
+-Entrada15
+monto
+-250
+concepto
+50 de cinta masking y 200 de pita
+ubicacion
+exterior
+retirante
+retirante
+fecha
+30/10/2025 14:40:47
