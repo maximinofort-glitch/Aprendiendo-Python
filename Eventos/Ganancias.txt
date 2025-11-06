@@ -1,36 +1,18 @@
-+Entrada3
++Entrada1
 monto
-11180
+7442.5
 concepto
-86 entradas vendidas
+Total ganado del evento de halloween
 ubicacion
 exterior
 fecha
-30/10/2025 08:44:07
-+Entrada4
+05/11/2025 22:56:07
++Entrada2
 monto
 6600
 concepto
-juntados por los 400 por alumno
+Juntados de los 400 dados por cada alumno del grupo
 ubicacion
 interior
 fecha
-30/10/2025 08:44:52
-+Entrada5
-monto
-350
-concepto
-7 entradas para el torneo de clash pagadas (hay como 4 mas que seguramente paguen)
-ubicacion
-exterior
-fecha
-30/10/2025 08:45:56
-+Entrada6
-monto
-490
-concepto
-14
-ubicacion
-exterior
-fecha
-30/10/2025 08:46:42
+05/11/2025 22:56:37

@@ -1,9 +1,12 @@
 from datetime import datetime 
-from colorama import init, Fore, Style
+from colorama import Fore, Style
+import textwrap
 import os
 
-#gos.chdir(r"C:\Users\maxim\OneDrive\Documentos\Codigos\Eventos")
-os.chdir(r"C:\Users\maxim\Documents\Aprendiendo-Python\Eventos")
+os.chdir(r"C:\Users\maxim\OneDrive\Documentos\Codigos\Eventos")
+#os.chdir(r"C:\Users\maxim\Documents\Aprendiendo-Python\Eventos")
+
+#Toda esta seccion de colores es para aplicar colores al texto con el formato color("color", "texto a colorear")
 colores = {
     "amarillo" : Fore.YELLOW,
     "azul" : Fore.BLUE,
@@ -22,8 +25,9 @@ def color(color_escogido, texto):
     global colores
     texto_coloreado = f"{colores[color_escogido]}{texto}{Fore.RESET}"
     return texto_coloreado
+#EJEMPLO:
+#print(f"Probando un {color('azul', 'color')}, en este caso el azul")
 
-init(autoreset=True)
 #Desempaqueta las lineas de Ganancias.txt, Gastos.txt y Total.txt, convirtiendolas en diccionarios dentro del diccioanrio Diccionarios
 def abrir():
     Diccionarios = {
@@ -43,9 +47,6 @@ def abrir():
         else:
             lista = archivo.lower()
             
-            
-        print(len(datos))
-        print(lista)
         if archivo in ("Ganancias", "Ganancias_Papelera"):
             rango = 9
         else:
@@ -66,9 +67,8 @@ def abrir():
                 elif (indice - (rango * ((grupo / rango) - 1))) in (3, 5, 7, 9, 11):
                     valor = datos[indice - 1]
                     Diccionarios[lista][clave][dato] = valor
-                    print(Diccionarios[lista][clave])
                 if (indice - (rango * ((grupo / rango) - 1))) == 3:
-                    int(valor)
+                    float(valor)
             #este metodo puede ser acortado haciendo que automaticamente se creen las claves "ubicacion, monto, concepto, retirante y fecha, de manera que no tienen que venir incluidos y repetidos por cada grupo dentro de los txt"
                     
             #agarra el ultimo indice de cada grupo, 7, 14, 21, usa ese indice / 7 para saber que numero de grupo es y resta (7 * numero de grupo - 1) a cada indice individual, ejemplo
@@ -85,8 +85,8 @@ def abrir():
 
     with open("Total.txt", "r") as f:
         datos = [linea.strip() for linea in f.readlines()]
-    Diccionarios["total"]["interior"] = int(datos[0])
-    Diccionarios["total"]["exterior"] = int(datos[1])
+    Diccionarios["total"]["interior"] = float(datos[0])
+    Diccionarios["total"]["exterior"] = float(datos[1])
     return Diccionarios, indices
 
 #Empaqueta los diccionarios de Ganancias.txt, Gastos.txt y Total.txt, convirtiendolos en lineas ordenadas de manera especifica para ser desempaquetados en el futuro
@@ -136,27 +136,30 @@ def cerrar(Diccionarios):
             pass
     return True
 
-#Dicta como se imprimen las distintas listas existentes. Es el menu para la funcion revisar en el menu principal
+#Dicta como se imprimen las distintas listas existentes. Es la introduccion al menu de modificaciones
 def revisar(Diccionarios):
     lista = ''
-    ganancias = f"{color('verde','Ganancias')}: Muestra las entradas de las ganancias\n"
-    gastos = f"{color('lrojo', 'Gastos')}: Muestra las entradas de los gastos\n"
-    total = f"{color('lazul', 'Total')}: Muestra el monto de dinero total, la que hay dentro (con la maestra caro) y el exterior (dentro de la caja fuerte)\n"
-    papelera = f"{color('negro', 'Papelera')}: Muestra las entradas que han sido borradas en el pasado\n"
-    menu = f"{color('azul', 'Menu')}: Vuelve al menu"
+    ganancias = f"{color('verde','Ganancias')}: Muestra las entradas de las ganancias"
+    gastos = f"{color('lrojo', 'Gastos')}: Muestra las entradas de los gastos"
+    total = f"{color('lazul', 'Total')}: Muestra el monto de dinero total, la que hay dentro (con la maestra caro) y el exterior (dentro de la caja fuerte)"
+    papelera = f"{color('negro', 'Papelera')}: Muestra las entradas que han sido borradas en el pasado"
+    main = f"{color('azul', 'Menu')}: Vuelve al menu"
     while lista != "menu":
         while True:
-            print(
-                f"Listas:\n\n"
-                f"{ganancias if lista != 'ganancias' else ''}"
-                f"{gastos if lista != 'gastos' else ''}"
-                f"{total if lista != 'total' else ''}"
-                f"{papelera if lista != 'papelera' else ''}\n"
-                f"{menu}\n"
-                )
+            print(textwrap.dedent(f"""
+                Listas:
+                                  
+                {ganancias if lista != 'ganancias' else ''}
+                {gastos if lista != 'gastos' else ''}
+                {total if lista != 'total' else ''}
+                {papelera if lista != 'papelera' else ''}
+
+                {main}
+
+                """))
             lista = ''
-            accion = lista
-            lista = input(color("amarillo", "Escribe la lista a revisar: "))
+            lista = input(f"{color('amarillo', 'Escribe la lista a revisar')} \n>>>>>>>> ")
+            lista = lista.lower()
             if lista != '':
                 break
 
@@ -176,9 +179,9 @@ def revisar(Diccionarios):
         elif lista == "total":
             print(f"{color('amarillo','Diccionarios')}"     f"[{color('lcyan', f'{lista}')}]" + "{ ")
             print(
-                f"{color('lrojo', 'Dinero en el interior' )} : {Diccionarios['total']['interior']}\n"
-                f"{color('verde', 'Dinero en el exterior' )} : {Diccionarios['total']['exterior']}\n"
-                f"{color('amarillo', 'Dinero total es')} : {(Diccionarios['total']['interior'] + Diccionarios['total']['exterior'])}\n"
+                f"      {color('lrojo', 'Dinero en el interior' )} : {Diccionarios['total']['interior']}\n"
+                f"      {color('verde', 'Dinero en el exterior' )} : {Diccionarios['total']['exterior']}\n"
+                f"      {color('amarillo', 'Dinero total es')} : {(Diccionarios['total']['interior'] + Diccionarios['total']['exterior'])}\n"
                 "}"
                 )
             print("")
@@ -193,16 +196,25 @@ def revisar(Diccionarios):
             continue
 
         if  lista != "menu":
-            confirmacion = input(
-                f"Escribe {color('verde', ''' 'si ' ''')} para modificar algun dato (monto, concepto, ubicacion) de alguna entrada de la lista \n"
-                f"En caso contrario presiona {color('amarillo', 'enter')}: "
-                )
-            if confirmacion == "si":  
-                    menu = modificar(lista, Diccionarios)
-                    if menu:
+            while True:
+                confirmacion = input(
+                    f"Escribe {color('verde', ''' 'si ' ''')} para modificar algun dato (monto, concepto, ubicacion) de alguna entrada de la lista \n"
+                    f"En caso contrario presiona {color('amarillo', 'enter')}: "
+                    )
+                confirmacion = confirmacion.lower()
+                if confirmacion == "si":  
+                        menu = modificar(lista, Diccionarios)
                         break
-                    lista = ''
+                elif confirmacion == "":
+                    menu = False
+                    break
+                else: 
                     continue
+
+            if menu:
+                break
+            lista = ''
+            continue
         else:
             break
 
@@ -217,20 +229,18 @@ def modificar(lista, Diccionarios):
         for entrada in sorted(Diccionarios[lista], key=lambda x: int(x[8:])):
             imprimir_listas(lista, entrada, Diccionarios)
 
-    
-    seleccion = input(f"Selecciona una entrada basada en su {color('azul', 'numero')}: ")
-    
     while True:
-        for entrada in Diccionarios[lista]:
-            if entrada == f"-Entrada{seleccion}":
-                entrada = f"-Entrada{seleccion}"
-                break
-            elif entrada == f"+Entrada{seleccion}":
-                entrada = f"+Entrada{seleccion}"
-                break
-            else:
-                continue
-        break
+        seleccion = input(f"Selecciona una entrada basada en su {color('azul', 'numero')}: ")
+        seleccion = seleccion.lower()
+        if f"+Entrada{seleccion}" in Diccionarios[lista]:
+            entrada = f"+Entrada{seleccion}"
+            break
+        elif f"-Entrada{seleccion}" in Diccionarios[lista]:
+            entrada = f"-Entrada{seleccion}"
+            break
+        else:
+            print(f"No se ha encontrado la {color('amarillo',f'Entrada{seleccion}')}")
+            continue
     
 
     print(f"Se ha seleccinado la ' {entrada[1:]} ':")
@@ -255,13 +265,14 @@ def modificar(lista, Diccionarios):
             )
         
         
-        accion = input("¿Que deseas hacer con la entrada?\n")
-        
+        accion = input(f"{color('amarillo', '¿Que deseas hacer con la entrada?')}\n>>>>>>>> ")
+        accion = accion.lower()
         if accion == "borrar":
             if lista == "papelera":
                 confirmacion = input(f"Escribe {color('lrojo', ''' 'borrar' ''')} para confirmar la eliminacion {color('rojo', 'DEFINITIVA')} de la entrada")
             else:
                 confirmacion = input(f"Escribe {color('lrojo', ''' 'borrar' ''')} para confirmar la eliminacion de la entrada")
+            confirmacion = confirmacion.lower()
             if confirmacion == "borrar":
                 if lista == "papelera":
                     del Diccionarios[lista][entrada]
@@ -270,7 +281,6 @@ def modificar(lista, Diccionarios):
                     indices_nuevos = []
                     for indice in indices:
                         if str(indice) != str(entrada[8:]):
-                            print(f"{indice} no es igual a {entrada[8:]}")
                             indices_nuevos.append(indice)
                     indices = indices_nuevos
                     Diccionarios['total'][Diccionarios[lista][entrada]["ubicacion"]] -=  int(Diccionarios[lista][entrada]["monto"])
@@ -285,10 +295,18 @@ def modificar(lista, Diccionarios):
         elif accion == "editar":
             imprimir_listas(lista, entrada, Diccionarios)
             dato = input(f"Elige el dato a modificar")
+            dato = dato.lower()
             valor = input(f"Escribe el nuevo valor de la clave {dato}")
+            valor = valor.lower()
             confirmacion = input(f"Escribe si para confirmar el cambio\n {dato} : {Diccionarios[lista][entrada][dato]} por {dato} : {valor}\n ")
+            confirmacion = confirmacion.lower()
+            
             if confirmacion == "si":
+                if dato == "monto":
+                    Diccionarios["total"][Diccionarios[lista][entrada]["ubicacion"]] -= float(Diccionarios[lista][entrada]["monto"])
                 Diccionarios[lista][entrada][dato] = valor
+                if dato == "monto":
+                    Diccionarios["total"][Diccionarios[lista][entrada]["ubicacion"]] += float(Diccionarios[lista][entrada]["monto"])
                 break
             else:
                 continue
@@ -303,6 +321,7 @@ def modificar(lista, Diccionarios):
                             indiceValor += 1
             
             confirmacion = input(f"Escribe {color('verde', 'confirmar')} para recuperar la entrada y devolverla a la lista '{lista}' con el indice {indiceValor}")
+            confirmacion = confirmacion.lower()
             if confirmacion == "confirmar":
                 
                 entrada_borrada = Diccionarios["papelera"].pop(entrada)
@@ -326,39 +345,36 @@ def modificar(lista, Diccionarios):
                 continue
 
         elif accion == "cancelar":
-            modificar(lista, Diccionarios)
-            return None
+            vuelta = modificar(lista, Diccionarios)
+            return vuelta
         elif accion == "volver":
-            break
+            return False
         elif accion == "menu":
-            return 
-            break
-
+            return True
         else:
             continue
 
             
-        
 
 def imprimir_listas(lista, entrada, Diccionarios):
     if entrada[0] == "+":
-        print(f"{color('amarillo','Diccionarios')}"     f"[{color('lverde', f'{lista}')}]"      f"[{color('verde', f'{entrada[0]}')}{color('amarillo', f'{entrada[1:]}')}] = " + "{ ")
-        print(
-            f"{'':<15}{color('verde', 'Monto de la ganancia')} : {Diccionarios[lista][entrada]['monto']}, \n"
-            f"{'':<15}{Fore.LIGHTMAGENTA_EX}Concepto de la {color('verde', 'ganancia')} : {Diccionarios[lista][entrada]['concepto']}, \n"
-            f"{'':<15}{color('lcyan','Ubicacion')} : {Diccionarios[lista][entrada]['ubicacion']},"
-            )
+        print(f"{color('amarillo','Diccionarios')}"     f"[{color('lverde', f'{lista}')}]"      f"[{color('verde', f'{entrada[0]}')}{color('amarillo', f'{entrada[1:]}')}] = " + "{ ", end = "")
+        print(f"""
+            {'':<5}{color('verde', 'Monto de la ganancia')} : {Diccionarios[lista][entrada]['monto']},
+            {'':<5}{Fore.LIGHTMAGENTA_EX}Concepto de la {color('verde', 'ganancia')} : {Diccionarios[lista][entrada]['concepto']}, 
+            {'':<5}{color('lcyan','Ubicacion')} : {Diccionarios[lista][entrada]['ubicacion']},
+            """, end = "")
         
     elif entrada[0] == "-":
-        print(f"{color('amarillo','Diccionarios')}"     f"[{color('lrojo', f'{lista}')}]"      f"[{color('rojo', f'{entrada[0]}')}{color('amarillo', f'{entrada[1:]}')}] = " + "{ ")
-        print(
-            f"{'':<15}{color('lrojo', 'Monto del gasto')} : {Diccionarios[lista][entrada]['monto']},\n"
-            f"{'':<15}{Fore.LIGHTMAGENTA_EX}Concepto del {color('lrojo', 'gasto')} : {Diccionarios[lista][entrada]['concepto']},\n"
-            f"{'':<15}{color('lcyan','Ubicacion del dinero')} : {Diccionarios[lista][entrada]['ubicacion']}, \n"
-            f"{'':<15}{color('magenta', 'Nombre del retirante')} : {Diccionarios[lista][entrada]['retirante']}"
-            )
+        print(f"{color('amarillo','Diccionarios')}"     f"[{color('lrojo', f'{lista}')}]"      f"[{color('rojo', f'{entrada[0]}')}{color('amarillo', f'{entrada[1:]}')}] = " + "{ ", end = "")
+        print(f"""
+            {'':<5}{color('lrojo', 'Monto del gasto')} : {Diccionarios[lista][entrada]['monto']},
+            {'':<5}{Fore.LIGHTMAGENTA_EX}Concepto del {color('lrojo', 'gasto')} : {Diccionarios[lista][entrada]['concepto']},
+            {'':<5}{color('lcyan','Ubicacion del dinero')} : {Diccionarios[lista][entrada]['ubicacion']}, 
+            {'':<5}{color('magenta', 'Nombre del retirante')} : {Diccionarios[lista][entrada]['retirante']}
+            """, end = "")
     print(
-        f"{'':<15}{Fore.BLUE}Fecha{Fore.RESET}: {Diccionarios[lista][entrada]['fecha']}  \n" + '}'
+        f"{'':<5}{Fore.BLUE}Fecha{Fore.RESET}: {Diccionarios[lista][entrada]['fecha']}  \n" + f"{'':<17}" + '}'
         )
     print("")
 
@@ -370,6 +386,7 @@ def entrada_definicion(accion, Diccionarios):
                     f"{Fore.RED}Retiro: " f"{Fore.RESET}Quita dinero de la cuenta\n{Fore.RESET}"
                     f"{Fore.YELLOW}\n\nEscribe tu accion: {Fore.RESET}"
                     )
+        accion = accion.lower()
         retroceder(accion, "entrada_definicion")
         if accion == "deposito":
             lista = "ganancias"
@@ -390,13 +407,14 @@ def añadir_entrada(accion, lista, Diccionarios):
             while True:
                 try:
                     monto = input(color("verde", "Introduce el valor de la ganancia") + ": ")
-                    int(monto)
+                    float(monto)
                     break
-                except TypeError:
-                    print("Error: No se ha introducido un numero como monto")
+                except ValueError:
+                    print("Error: No se ha introducido un numero valido como monto")
                     continue
             concepto = input(f"{color('lazul', 'Escribe el concepto de la ')}{color('verde', 'ganancia')}: ")
             ubicacion = input(f"{color('lmagenta', 'Introduce la ubicacion del dinero (exterior o interior)')}: ")
+            ubicacion = ubicacion.lower()
             
             
     elif accion == "retiro":
@@ -410,6 +428,7 @@ def añadir_entrada(accion, lista, Diccionarios):
                     continue
             concepto = input(f"{color('lazul', 'Escribe el concepto del ')}{color('lrojo', 'gasto')}: ")
             ubicacion = input(f"{color('lmagenta', 'Introduce la ubicacion del dinero (exterior o interior)')}: ")
+            ubicacion = ubicacion.lower()
             retirante = input(f"{color('lcyan', 'Introduce el nombre de quien retira el efectivo')}: ")
             
 
@@ -449,9 +468,8 @@ def añadir_entrada(accion, lista, Diccionarios):
                 
     while True:
         confirmacion = input("¿Los datos son correctos?\n")
-    
+        confirmacion = confirmacion.lower()
         if confirmacion == "si":
-            print(indices)
             Diccionarios[lista][f'{entrada}'] = {
                 "monto" : f"{monto}",
                 "concepto" : f"{concepto}",
@@ -460,7 +478,7 @@ def añadir_entrada(accion, lista, Diccionarios):
                 "fecha" : f"{datetime.now().strftime('%d/%m/%Y %H:%M:%S')}"
                 }
             indices.append(indiceValor)
-            Diccionarios["total"][ubicacion] += int(monto)
+            Diccionarios["total"][ubicacion] += float(monto)
             print("")
             print(f"La Entrada{indiceValor}:\n" 
                 f"{Diccionarios[lista][f'{entrada}']}\n"
@@ -490,27 +508,25 @@ def retroceder(entrada, funcion):
 def main():
     global Diccionarios
     global indices
-    print(indices)
     while True:
-        accion = input(f"Bienvenido al {Fore.BLUE}menú\n\n"
+        accion = input(textwrap.dedent(f"""
+                       Bienvenido al {Fore.BLUE}menú
                        
-
-                       f"{Fore.LIGHTMAGENTA_EX}Entrada: {Fore.RESET}Introduce una entrada (agrega o quita dinero a la cuenta)\n"
-                       f"{Fore.YELLOW}Revisar: {Fore.RESET}Revisa el dinero dentro y fuera de la cuenta\n"
-                       f"{Fore.GREEN}Guardar: {Fore.RESET}Salir del programa guardando los cambios\n"
-                       f"{Fore.LIGHTRED_EX}Salir: {Fore.RESET}Salir del programa {Fore.LIGHTRED_EX}SIN GUARDAR{Fore.RESET} los cambios\n\n"
+                       {color('magenta', 'Entrada')}: Introduce una entrada (agrega o quita dinero a la cuenta)
+                       {color('amarillo', 'Revisar')}: Revisa el dinero dentro y fuera de la cuenta
+                       {color('verde', 'Guardar')}: Salir del programa guardando los cambios
+                       {color('lrojo', 'Salir')}: Salir del programa {color('lrojo', 'SIN GUARDAR')} los cambios
+                       {color('rojo', 'Reiniciar')}: Reinicia {color('rojo', 'TODOS')} los datos almacenados
                        
-                       f"Escribe {Fore.BLUE}menu {Fore.RESET}en cualquier momento para cancelar y volver a esta pagina"
+                       Escribe {Fore.BLUE}menu {Fore.RESET}en cualquier momento para cancelar y volver a esta pagina
                         
-                       f"{Fore.YELLOW}\n\nEscribe tu accion: {Fore.RESET}"
-                       )
+                       {color('amarillo', 'Escribe tu accion')}
+                       >>>>>>> """))
         print("")
-        print(Diccionarios)
+        accion = accion.lower()
         if accion == "entrada":
             Diccionarios, indices = entrada_definicion(accion, Diccionarios)
                 
-
-
 
         elif accion == "revisar":
             revisar(Diccionarios)
@@ -522,17 +538,32 @@ def main():
             
         elif accion == "salir":
             accion_final = input(f"¿Estas seguro de querer salir {Fore.LIGHTRED_EX}SIN GUARDAR{Fore.RESET} tus cambios?: ")
+            accion_final = accion_final.lower()
             if accion_final == "si":
                 return False
             else:
                 return True
+            
+        elif accion == "reiniciar":
+            confirmacion = input(f"¿Estas seguro de querer {color('rojo', 'REINCIAR TODOS')} los datos almacenados?\nEsta accion no es reversible una ves guardado el cambio\n>>>>>>>>>>>>>>>>> ")
+            confirmacion = confirmacion.lower()
+            if confirmacion == "si":
+                Diccionarios = {
+                    "ganancias" : {},
+                    "gastos" : {},
+                    "papelera" : {},
+                    "total" : {
+                        "interior" : 0,
+                        "exterior" : 0
+                        }
+                    }
+                indices = []
+                print("Todos los datos han sido borrados con exito")
         else:
             print("No se ha introducido una opcion valida. Favor de intentar nuevamente")
 
 Diccionarios, indices = abrir()
   
-print("")
-print("")
 while True:
     accion_final = main()
     if not accion_final:
