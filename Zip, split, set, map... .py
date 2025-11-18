@@ -6,3 +6,5 @@ objetos = []
 
 objetos = [i for x in datos_listados if objetos.index(x) % 3 == 0]
 print(objetos)
+
+    

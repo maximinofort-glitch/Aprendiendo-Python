@@ -1,0 +1,27 @@
++Entrada1
+monto
+4200.92
+concepto
+4200 de lo que me dio mi papa para pagar la inscripcion de la escuela
+ubicacion
+banamex
+fecha
+16/11/2025 12:40:03
++Entrada2
+monto
+978.40
+concepto
+acabo de depositar 1500, menos 600 que use de los 4200 que me dio mi papa para la inscripcion (esta en banamex)
+ubicacion
+bbva
+fecha
+16/11/2025 12:40:36
++Entrada3
+monto
+640
+concepto
+al igual que las demas entradas (1 y 2) este solo es el dinero inicial
+ubicacion
+efectivo
+fecha
+16/11/2025 12:41:25
