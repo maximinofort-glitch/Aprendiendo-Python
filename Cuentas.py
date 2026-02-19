@@ -48,6 +48,7 @@ def SolicitudDatos(sorteos):
           if Contador % 2 == 0:
                Dias[f"dia{str(int(Contador/2))}"] = [int(Dias_input[Contador - 2]), int(Dias_input[Contador - 1])]
      return Dias
+     
 ExtraSorteo = 0
 def ElenaExtra(ExtraSorteo):
      for dia in Dias:
@@ -174,15 +175,14 @@ while vendedor != "exit":
       while True:
           try:
               
-           vendedor = str(input("Escribe el vendedor a calcular: "))
-           if vendedor == "exit":
-               print("Saliendo del programa...")
-               break
-           elif vendedor in ("tere","tola","maribel","luis","carmen","elena","90","27","lupe","norma"):
-                deuda = int(input("Escribe la deuda pendiente: "))
-                print(" ")
-                calculo(vendedor, deuda)
-           else:
-                print("vendedor no encontrado, intenta de nuevo.")
+               vendedor = input("""Escribe el vendedor a calcular
+                    >>>>>>>>>>>> """)
+               if vendedor == "exit":
+                    print("Saliendo del programa...")
+                    break
+               elif vendedor in Deudores:
+                    calculo(vendedor, Deudores)
+               else:
+                    print("vendedor no encontrado, intenta de nuevo.")
           except ValueError:
-                print("Debes escribir un dato valido.")
+                rint("Debes escribir un dato valido.")
