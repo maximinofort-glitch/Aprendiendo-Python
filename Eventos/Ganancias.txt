@@ -13,6 +13,6 @@ monto
 concepto
 Juntados de los 400 dados por cada alumno del grupo
 ubicacion
-interior
+exterior
 fecha
 05/11/2025 22:56:37

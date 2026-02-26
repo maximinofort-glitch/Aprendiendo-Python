@@ -1,0 +1,55 @@
+-Entrada3
+monto
+-400
+concepto
+Reembolso de los 400 de Fernanda
+ubicacion
+exterior
+retirante
+retirante
+fecha
+12/12/2025 10:21:12
+-Entrada4
+monto
+-400
+concepto
+Reembolso de los 400 de Fernanda
+ubicacion
+exterior
+retirante
+retirante
+fecha
+12/12/2025 10:22:16
+-Entrada5
+monto
+-163.5
+concepto
+Totopos 1KG
+ubicacion
+exterior
+retirante
+retirante
+fecha
+12/12/2025 10:25:34
+-Entrada6
+monto
+-600.0
+concepto
+Hojaldras, las compro miguel
+ubicacion
+exterior
+retirante
+retirante
+fecha
+12/12/2025 10:34:30
+-Entrada7
+monto
+-942.0
+concepto
+Caro en globos, palomitas, chicharrones, reno, bolsas, miguelitos, powerade, vasos de plastico y tenedores y tal vez algo mas
+ubicacion
+exterior
+retirante
+retirante
+fecha
+12/12/2025 10:36:42

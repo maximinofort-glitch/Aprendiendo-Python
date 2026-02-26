@@ -3,8 +3,8 @@ from colorama import Fore, Style
 import textwrap
 import os
 
-os.chdir(r"C:\Users\maxim\OneDrive\Documentos\Codigos\Eventos")
-#os.chdir(r"C:\Users\maxim\Documents\Aprendiendo-Python\Eventos")
+#os.chdir(r"C:\Users\maxim\OneDrive\Documentos\Codigos\Eventos")
+os.chdir(r"C:\Users\maxim\Documents\Aprendiendo-Python\Eventos")
 
 #Toda esta seccion de colores es para aplicar colores al texto con el formato color("color", "texto a colorear")
 colores = {
@@ -421,7 +421,7 @@ def añadir_entrada(accion, lista, Diccionarios):
             while True:
                 try:
                     monto = input(color("lrojo", "Introduce el monto del gasto") + ": ")
-                    monto = -int(monto)
+                    monto = -float(monto)
                     break
                 except TypeError:
                     print("Error: No se ha introducido un numero como monto")
